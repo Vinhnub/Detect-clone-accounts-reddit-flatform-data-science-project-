@@ -2,16 +2,20 @@ import praw
 from datetime import datetime
 
 
-# Khai báo thông tin API của bạn
+# Kết nối Reddit API
 reddit = praw.Reddit(
-    client_id="PXxWBAYDZbd5NopuLDGapA",        # thay bằng client_id của bạn
-    client_secret="KyyTOoPofMECMknM5EdXkKEyZM3qLg",# thay bằng client_secret của bạn
-    user_agent="test_app"
+    client_id="nX_QTy5GUIfPao80akP1Mw",
+    client_secret="oMjRLSYCrqvP_Uvt2pyEnIu1tOjV6g",
+    user_agent="myApp",
+    username="Strange_Buffalo_7001",   # cần nếu muốn truy cập private sub
+    password="Vinh1255@@" 
 )
 
+reddit.validate_on_submit = True
+reddit.config.allow_nsfw = True
 
 # Tài khoản muốn kiểm tra
-username = "bigbellysnoops"
+username = "C4TISREAL"
 user = reddit.redditor(username)
 
 
