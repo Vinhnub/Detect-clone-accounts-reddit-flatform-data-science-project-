@@ -13,34 +13,33 @@ reddit = praw.Reddit(
 reddit.validate_on_submit = True
 reddit.config.allow_nsfw = True
 
-username = "decartai"
-user = reddit.redditor(username)
-
-# Hàm chuyển timestamp sang UTC+7
 def to_utc7(ts):
-    dt = datetime.fromtimestamp(ts, tz=timezone.utc)  # thời gian gốc (UTC)
-    return dt.astimezone(timezone(timedelta(hours=7)))  # đổi sang UTC+7
+    dt = datetime.fromtimestamp(ts, tz=timezone.utc) 
+    return dt.astimezone(timezone(timedelta(hours=7)))  
 
-# Lấy submissions (bài post)
-count = 1
-for submission in user.submissions.new(limit=None):
-    print(f"--- Post {count} ---")
-    print("Subreddit:", submission.subreddit)
-    print("Title    :", submission.title)
-    print("Content  :", submission.selftext if submission.selftext else "[No text / Link post]")
-    print("URL      :", submission.url)
-    print("Score    :", submission.score)
-    print("Created  :", to_utc7(submission.created_utc).strftime("%Y-%m-%d %H:%M:%S"))
-    print()
-    count += 1
+def get_data_user(username):
+    user = reddit.redditor(username)
 
-# Lấy comments
-count = 1
-for comment in user.comments.new(limit=None):
-    print(f"--- Comment {count} ---")
-    print("Subreddit:", comment.subreddit)
-    print("Body     :", comment.body)
-    print("Score    :", comment.score)
-    print("Created  :", to_utc7(comment.created_utc).strftime("%Y-%m-%d %H:%M:%S"))
-    print()
-    count += 1
+    count = 1
+    for submission in user.submissions.new(limit=None):
+        print(f"--- Post {count} --- ")
+        print("Subreddit:", submission.subreddit)
+        print("Title    :", submission.title)
+        print("Content  :", submission.selftext if submission.selftext else "[No text / Link post]")
+        print("URL      :", submission.url)
+        print("Score    :", submission.score)
+        print("Created  :", to_utc7(submission.created_utc).strftime("%Y-%m-%d %H:%M:%S"))
+        print()
+        count += 1
+
+    count = 1
+    for comment in user.comments.new(limit=None):
+        print(f"--- Comment {count} ---")
+        print("Subreddit:", comment.subreddit)
+        print("Body     :", comment.body)
+        print("Score    :", comment.score)
+        print("Created  :", to_utc7(comment.created_utc).strftime("%Y-%m-%d %H:%M:%S"))
+        print()
+        count += 1
+
+get_data_user("laonnia")

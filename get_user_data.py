@@ -15,7 +15,7 @@ reddit.validate_on_submit = True
 reddit.config.allow_nsfw = True
 
 # Tài khoản muốn kiểm tra
-username = "C4TISREAL"
+username = "tunghg789kt3"
 user = reddit.redditor(username)
 
 
@@ -30,14 +30,6 @@ print(f"🔹 Reddit Premium: {user.is_gold}")
 # Ngày tạo tài khoản
 created_date = datetime.utcfromtimestamp(user.created_utc).strftime('%Y-%m-%d %H:%M:%S')
 print("Ngày tạo tài khoản:", created_date)
-
-
-# Followers
-try:
-    followers = list(user.followers())
-    print("Số lượng follower:", len(followers))
-except Exception as e:
-    print("Không thể lấy số lượng follower (API hạn chế):", e)
 
 
 # Subreddit hoạt động
