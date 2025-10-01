@@ -1,16 +1,13 @@
 import requests
 from requests.auth import HTTPBasicAuth
 from datetime import datetime, timedelta, timezone
+import time
 
 CLIENT_ID = "nX_QTy5GUIfPao80akP1Mw"
 SECRET = "oMjRLSYCrqvP_Uvt2pyEnIu1tOjV6g"
 USERNAME = "Strange_Buffalo_7001"
 PASSWORD = "Vinh1255@@"
 USER_AGENT = "Strange_Buffalo_7001"
-
-def to_utc7(ts):
-    dt = datetime.fromtimestamp(ts, tz=timezone.utc)
-    return dt.astimezone(timezone(timedelta(hours=7)))
 
 auth = HTTPBasicAuth(CLIENT_ID, SECRET)
 data = {
@@ -30,7 +27,10 @@ headers = {
     "User-Agent": USER_AGENT
 }
 
-# ---- Hàm lấy toàn bộ submissions/comments ----
+def to_utc7(ts):
+    dt = datetime.fromtimestamp(ts, tz=timezone.utc)
+    return dt.astimezone(timezone(timedelta(hours=7)))
+
 def fetch_user_content(username, kind="submitted", limit=10000):
     url = f"https://oauth.reddit.com/user/{username}/{kind}"
     all_items = []
@@ -47,6 +47,7 @@ def fetch_user_content(username, kind="submitted", limit=10000):
             continue
         if r.status_code != 200:
             print("Lỗi:", r.status_code, r.text)
+            time.sleep(60)
             continue
         data = r.json()["data"]
 
@@ -76,6 +77,7 @@ def get_user_info(username):
             continue
         if r.status_code != 200:
             print("Lỗi:", r.status_code, r.text)
+            time.sleep(60)
             continue
         
         try:
@@ -84,6 +86,7 @@ def get_user_info(username):
             continue
         if r2.status_code != 200:
             print("Lỗi:", r2.status_code, r2.text)
+            time.sleep(60)
             continue
 
         data = r.json()["data"]
@@ -94,6 +97,8 @@ def get_user_info(username):
         print("Comment Karma:", data["comment_karma"])
         print("Total Karma:", data["total_karma"])
         print("Created at  :", to_utc7(data["created_utc"]).strftime("%Y-%m-%d %H:%M:%S"))
+        print("Premium  :", "Yes" if data.get("is_premium") else "No")
+
         trophies = r2.json()["data"]["trophies"]
 
         print("\n=== Achiverment ===")
@@ -135,9 +140,9 @@ def get_data_user(username):
 
     print(f"Tổng cộng: {len(posts)} submissions, {len(comments)} comments.")
 
-# with open("users.txt", "r", encoding="utf-8") as file:
-#     all_user = file.readlines()
-#     for line in all_user:
-#         line = line.strip()
-#         get_data_user(line)
-get_data_user("laonnia")
+with open("users.txt", "r", encoding="utf-8") as file:
+    all_user = file.readlines()
+    for user in all_user:
+        user = user.strip()
+        get_user_info(user)
+        get_data_user(user)
