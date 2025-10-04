@@ -36,12 +36,15 @@ create table comment (
 	created datetime not null,
 	username varchar(30) not null references r_user(username)
 )
+
 drop table comment
 drop table post
 drop table user_achiverment
 drop table achiverment
 drop table r_user
 
-select count(*)
-from comment
+select *
+from post
+where score <= 0
+order by score
 

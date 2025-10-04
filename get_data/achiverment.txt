@@ -1,0 +1,53 @@
+Bellwether	File:Bellweather Trophy.png	Hang out on the new queue and flag carefully
+Well-rounded	File:Trophy wellrounded.png	Post good links and good comments
+Best Link	File:Trophy bestlink.png	Submit a great link
+Best Comment	File:Trophy bestcomment.png	Write a great comment
+ComboLinker	File:Trophy combolinker.png	Submit lots of good links
+ComboCommenter	File:Trophy combocommenter.png	Post a high percentage of good comments in one day
+Inciteful Link	File:Trophy incitefullink.png	Submit something worthwhile but provocative
+Inciteful Comment	File:Trophy incitefulcomment.png	Write something interesting but provocative
+Shutterbug	File:Trophy shutterbug.png	Contribute a photo to the sidebar
+New User	File:Trophy newuser.png	Join Reddit!
+Verified Email Address	File:Trophy verifiedemailaddress.png	Verify your email address
+Gilding (tiered)	File:NG4WC LuY7oRv2jGxQ2BuH-9R09 SSqyBRx2S2QwZ14.png	Gild a link or comment
+One-Year Club	File:Trophy oneyearclub.png	Keep up the good work!
+Two-Year Club	File:Trophy twoyearclub.png
+Three-Year Club	File:Trophy threeyearclub.png
+Four-Year Club	File:Trophy fouryearclub.png
+Five-Year Club	File:Trophy fiveyearclub.png
+Six-Year Club	File:Trophy sixyearclub.png
+Seven-Year Club	File:Trophy sevenyearclub.png
+Eight-Year Club	File:Trophy eightyearclub.png
+Nine-Year Club	File:Trophy nineyearclub.png
+Ten-Year Club	File:Trophy tenyearclub.png
+Eleven-Year Club	File:Trophy elevenyearclub.png
+Twelve-Year Club	File:Trophy twelveyearclub.png
+Thirteen-Year Club	File:Trophy thirteenyearclub.png
+Fourteen-Year Club	File:Trophy 14 year club.png
+Fifteen-Year Club	File:Trophy 15 year club.png
+Translator	File:Trophy Translator.png	Foreign language translations
+Open Sorcerer	File:Trophy opensorcerer.png	Contribute code to reddit
+White Hat	File:Trophy whitehat.png	RESPONSIBLY probe and report any holes in the reddit code. More details here.
+CSS Animal	File:Trophy cssanimal.png	Mysterious
+Artisan	File:Trophy artisan.png	Artistic contributions
+Beta Team	File:Trophy betateam.png	Participate in a reddit beta.
+reddit Gold	File:Trophy redditgold.png	reddit supporter. More details here.
+reddit Mold	File:Trophy redditmold.png	April Fools 2011 More details here.
+End Game '22	File:End Game '22 Trophy.png	Place a white pixel during the 2022 /r/place anti-void
+First Placer '22	File:First Placer '22 Trophy.png	Be the first person to change a pixel during the 2022 /r/place
+Final Canvas '22	File:Final Canvas '22 Trophy.png	Have a pixel in the final image during the 2022 /r/place
+Place '17	File:Place 17 Trophy.png	Participate in the 2017 /r/place
+Place '22	File:Place '22 Trophy.png	Participate in the 2022 /r/place
+Place '23		Participate in the 2023 /r/place
+Charter Member	File:Trophy chartermember.png	Joined reddit gold during the initial "no features yet" leap-of-faith period
+Alienator	File:Trophy alienator.png	Design a logo used on reddit's front page.
+Team Orangered	File:Trophy teamorangered.png	Emerged victorious in the great Orangered/Periwinkle clash of 2013
+Team Periwinkle	File:Trophy teamperiwinkle.png	Fought valiantly in the great Orangered/Periwinkle clash of the ages
+Spared	File:Trophy spared.png	Was spared in "The Snap" of /r/thanosdidnothingwrong.
+Snapped	File:Trophy snapped.png	Was lost in "The Snap" to /r/inthesoulstone.
+Xbox Live	File:Xbox-40.png	Connected your Reddit account to Xbox Live
+100 Awards Club	File:Trophy 100 Awards Club.png	Get 100 awards in a single month.
+Not Forgotten	File:NotForgotten.png	Anyone who took part in the Throne Pool will be receiving this trophy on their user profile. Your character may not have won, but everyone should have something to remember it by.
+No Throne, No Problems	File:NoThroneNoProblems.png	Anyone who picked r/nobodywinsthethrone will receive this trophy, given that there was, in fact, no Iron Throne by the end of the series.
+King of the Ashes	File:KingoftheAshes.png	Anyone who picked r/branwinsthethrone will receive this trophy. Bran may not be atop the Iron Throne, but he does reign over the ashes, and the rest of the seven six kingdoms.
+Queen in da Norf	File:QueenindaNorf.png	Anyone who picked r/sansawinsthethrone will receive this trophy. She didn't win THE throne, but she did win an important one, so Team Sansa is getting a trophy too.
