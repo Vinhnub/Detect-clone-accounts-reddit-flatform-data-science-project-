@@ -5,6 +5,7 @@ from constants import *
 from termcolor import colored
 import pyodbc 
 import pandas as pd
+import matplotlib.pyplot as plt 
 
 class DatabaseFetcher:
     def __init__(self):
@@ -13,10 +14,10 @@ class DatabaseFetcher:
                       "Database=spam_account_detect_database;"
                       "Trusted_Connection=yes;")
         self.__cursor = self.__cnxn.cursor()
-        self.__r_user_table = pd.read_sql("select * from r_user", self.__cnxn)
+        self.__r_user_table = pd.read_sql("select * from r_user", self.__cnxn) # parse_dates=["created"], index_col="created"
         self.__user_achiverment_table = pd.read_sql("select * from user_achiverment", self.__cnxn)
-        self.__post_table = pd.read_sql("select * from post", self.__cnxn)
-        self.__comment_table = pd.read_sql("select * from comment", self.__cnxn)
+        self.__post_table = pd.read_sql("select * from post", self.__cnxn) # parse_dates=["created"], index_col="created"
+        self.__comment_table = pd.read_sql("select * from comment", self.__cnxn) # parse_dates=["created"], index_col="created"
 
 
     def get_r_user_table(self):
@@ -40,6 +41,18 @@ class DatabaseFetcher:
 oData = DatabaseFetcher()
 
 comments = oData.get_comment_table()
+posts = oData.get_post_table()
+users = oData.get_r_user_table()
+achiverments = oData.get_user_achiverment_table()
+# print("===============================================================")
+# print(users[:5])
+# print("===============================================================")
+# print(achiverments[:5])
+# print("===============================================================")
+# print(posts[:5])
+# print("===============================================================")
+# print(comments[:5])
+# print("===============================================================")
 oData.get_size()
 # comments = comments.sort_values(by=['score'], ascending=False)
 # condition_1 = comments['score'] >= 100
@@ -54,3 +67,7 @@ oData.get_size()
 # weekday_counts = se_comments.groupby('weekday')['id'].count().to_frame(name='count')
 # weekday_counts.index = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 # print(weekday_counts)
+# users_premium = users['premium'] == True
+# print(users[users_premium])
+# old_user = (pd.Timestamp.now() - users['created']) >= pd.Timedelta(days=1000)
+# print(users[old_user])

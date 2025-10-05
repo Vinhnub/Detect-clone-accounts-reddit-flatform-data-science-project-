@@ -44,7 +44,12 @@ drop table achiverment
 drop table r_user
 
 select *
-from post
-where score <= 0
-order by score
+from r_user
+where datediff(day, created, getdate()) >= 365 * 8
+
+select * 
+from r_user
+where premium = 1
+
+
 

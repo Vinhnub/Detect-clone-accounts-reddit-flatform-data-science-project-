@@ -62,8 +62,6 @@ def fetch_user_content(username, kind="submitted", limit=10000):
             time.sleep(60)
             continue
         data = r.json()["data"]
-        # pretty_json = json.dumps(r.json(), indent=4, sort_keys=True)
-        # print(pretty_json)
 
         children = data["children"]
         if not children:
@@ -103,16 +101,16 @@ def get_user_info(username):
             time.sleep(60)
             continue
 
-        data = r.json()["data"]
+        data = r.json()["data"]   
 
-        # print("\n=== User infomation ===")
-        # print("Username :", data["name"])
-        # print("Link Karma:", data["link_karma"])
-        # print("Comment Karma:", data["comment_karma"])
-        # print("Total Karma:", data["total_karma"])
-        # print("Created at  :", to_utc7(data["created_utc"]).strftime("%Y-%m-%d %H:%M:%S"))
-        # print("Has verified email:", "Yes" if data["has_verified_email"] else "No")
-        # print("Premium  :", 0 if data.get("is_premium") is None else 1)
+        print("\n=== User infomation ===")
+        print("Username :", data["name"])
+        print("Link Karma:", data["link_karma"])
+        print("Comment Karma:", data["comment_karma"])
+        print("Total Karma:", data["total_karma"])
+        print("Created at  :", to_utc7(data["created_utc"]).strftime("%Y-%m-%d %H:%M:%S"))
+        print("Has verified email:", "Yes" if data["has_verified_email"] else "No")
+        print("Premium  :", 0 if data.get("is_premium") is None else 1)
 
         try:
             cursor.execute("""
@@ -129,7 +127,7 @@ def get_user_info(username):
             cursor.commit()
         except Exception as e:
             print_error(e)
-
+  
         trophies = r2.json()["data"]["trophies"]
 
         print("\n=== Trophies ===")
@@ -228,4 +226,4 @@ def get_data_user(username):
 #         #get_user_info(user)
 #         get_data_user(user)
 get_user_info("s9phea")
-get_data_user("s9phea")
+#get_data_user("13tarry")
