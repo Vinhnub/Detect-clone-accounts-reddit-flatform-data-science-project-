@@ -56,14 +56,12 @@ class RedditCrawler:
                     time.sleep(60)
                     continue
                 self.__token = res.json()["access_token"]   
-                # pretty_json = json.dumps(res.json(), indent=4, sort_keys=True)
-                # print(pretty_json)
-
                 self.__headers = {"Authorization": f"bearer {self.__token}",
                                   "User-Agent": USER_AGENT}
                 break
             except Exception as e:
                 self.print_error(e)
+        
 
     def _fetch_user_content(self, username, kind="submitted", limit=10000):
         url = f"https://oauth.reddit.com/user/{username}/{kind}.json"
@@ -93,6 +91,9 @@ class RedditCrawler:
                 time.sleep(60)
                 continue
             data = r.json()["data"]
+            # pretty_json = json.dumps(r.json(), indent=4, sort_keys=True)
+            # print(pretty_json)
+
 
             children = data["children"]
             if not children:
@@ -293,5 +294,5 @@ class RedditCrawler:
         return dt.astimezone(timezone(timedelta(hours=7)))
     
 oBot = RedditCrawler()
-oBot.fetch_user(1000)
+oBot.fetch_user(100)
     

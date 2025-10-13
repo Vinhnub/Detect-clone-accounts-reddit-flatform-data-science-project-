@@ -62,6 +62,9 @@ def fetch_user_content(username, kind="submitted", limit=10000):
             time.sleep(60)
             continue
         data = r.json()["data"]
+        pretty_json = json.dumps(r.json(), indent=4, sort_keys=True)
+        print(pretty_json)
+
 
         children = data["children"]
         if not children:
@@ -226,4 +229,4 @@ def get_data_user(username):
 #         #get_user_info(user)
 #         get_data_user(user)
 get_user_info("s9phea")
-#get_data_user("13tarry")
+get_data_user("13tarry")
