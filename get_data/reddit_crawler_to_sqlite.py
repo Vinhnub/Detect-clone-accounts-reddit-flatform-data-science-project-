@@ -294,5 +294,5 @@ class RedditCrawlerSQLite:
         return dt.astimezone(timezone(timedelta(hours=7)))
     
 oBot = RedditCrawlerSQLite()
-oBot.fetch_user(500)
+oBot.fetch_user(1000)
     
