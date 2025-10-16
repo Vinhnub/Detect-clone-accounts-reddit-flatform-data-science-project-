@@ -1,21 +1,23 @@
 from datetime import datetime, timedelta, timezone
 import time
 import json
-from constants import *
+from get_data.constants import *
+from database.database_access import Database
 from termcolor import colored
 import pyodbc 
 import pandas as pd
 import matplotlib.pyplot as plt 
 
 class DatabaseFetcher:
-    def __init__(self):
+    def __init__(self, isSqlite=False):
+        self.__sqlite_database = Database()
         self.__cnxn = pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};"
                       "Server=VINHNUB\SQLEXPRESS;"
                       "Database=spam_account_detect_database;"
-                      "Trusted_Connection=yes;")
+                      "Trusted_Connection=yes;") if not isSqlite else self.__sqlite_database.get_conn()
         self.__cursor = self.__cnxn.cursor()
         self.__r_user_table = pd.read_sql("select * from r_user", self.__cnxn) # parse_dates=["created"], index_col="created"
-        self.__user_achiverment_table = pd.read_sql("select * from user_achiverment", self.__cnxn)
+        self.__user_achievement_table = pd.read_sql("select * from user_achievement", self.__cnxn)
         self.__post_table = pd.read_sql("select * from post", self.__cnxn) # parse_dates=["created"], index_col="created"
         self.__comment_table = pd.read_sql("select * from comment", self.__cnxn) # parse_dates=["created"], index_col="created"
 
@@ -23,8 +25,8 @@ class DatabaseFetcher:
     def get_r_user_table(self):
         return self.__r_user_table
     
-    def get_user_achiverment_table(self):
-        return self.__user_achiverment_table
+    def get_user_achievement_table(self):
+        return self.__user_achievement_table
     
     def get_post_table(self):
         return self.__post_table
@@ -33,21 +35,21 @@ class DatabaseFetcher:
         return self.__comment_table
     
     def get_size(self):
-        print(f"user_achiverment: {len(self.__user_achiverment_table)}")
+        print(f"user_achievement: {len(self.__user_achievement_table)}")
         print(f"r_user: {len(self.__r_user_table)}")
         print(f"post: {len(self.__post_table)}")
         print(f"comment: {len(self.__comment_table)}")
 
-oData = DatabaseFetcher()
+oData = DatabaseFetcher(isSqlite=True)
 
 comments = oData.get_comment_table()
 posts = oData.get_post_table()
 users = oData.get_r_user_table()
-achiverments = oData.get_user_achiverment_table()
+achievements = oData.get_user_achievement_table()
 print("===============================================================")
 print(users)
 print("===============================================================")
-print(achiverments)
+print(achievements)
 print("===============================================================")
 print(posts)
 print("===============================================================")

@@ -3,24 +3,22 @@ from requests.auth import HTTPBasicAuth
 from datetime import datetime, timedelta, timezone
 import time
 import json
-from constants import *
+from get_data.constants import *
 from termcolor import colored
-import pyodbc 
 import logging
-from get_data.secrets import *
+import sqlite3
+from database.database_access import Database
 
-class RedditCrawler:
+class RedditCrawlerSQLite:
     def __init__(self):
         self.__auth = auth = HTTPBasicAuth(CLIENT_ID, SECRET)
         self.__data = {"grant_type": "password",
                        "username": USERNAME,
                        "password": PASSWORD}
         self._get_token()
-        cnxn = pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};"
-                      "Server=VINHNUB\SQLEXPRESS;"
-                      "Database=spam_account_detect_database;"
-                      "Trusted_Connection=yes;")
-        self.__cursor = cnxn.cursor()
+        self.__database = Database()
+        self.__conn = self.__database.get_conn()
+        self.__cursor = self.__database.get_cursor()
         self.__count_time_404 = 0
         logging.basicConfig(
             filename=LOG_FILE,
@@ -122,15 +120,15 @@ class RedditCrawler:
                 INSERT INTO post (id, subreddit, title, [content], p_url, score, created, username) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """, 
-                sub["id"], 
+                (sub["id"], 
                 sub["subreddit"],
                 sub["title"], 
                 sub.get("selftext") or "",
                 sub["url"], 
                 sub["score"],
                 self.to_utc7(sub["created_utc"]).strftime("%Y-%m-%d %H:%M:%S"),
-                username)
-                self.__cursor.commit()
+                username))
+                self.__conn.commit()
             except Exception as e:
                 self.print_error(e)
         self.log(f" Got {len(posts)} posts!", "info")
@@ -146,13 +144,13 @@ class RedditCrawler:
                 INSERT INTO comment (id, body, subreddit, score, created, username) 
                 VALUES (?, ?, ?, ?, ?, ?)
                 """, 
-                c["id"], 
+                (c["id"], 
                 c["body"], 
                 c["subreddit"],
                 c["score"],
                 self.to_utc7(c["created_utc"]).strftime("%Y-%m-%d %H:%M:%S"),
-                username)
-                self.__cursor.commit()
+                username))
+                self.__conn.commit()
             except Exception as e:
                 self.print_error(e)
 
@@ -187,13 +185,13 @@ class RedditCrawler:
             INSERT INTO r_user (username, link_karma, comment_karma, created, premium, verified_email) 
             VALUES (?, ?, ?, ?, ?, ?)
             """, 
-            data["name"], 
+            (data["name"], 
             data["link_karma"], 
             data["comment_karma"], 
             self.to_utc7(data["created_utc"]).strftime("%Y-%m-%d %H:%M:%S"),
             data["is_gold"],
-            data["has_verified_email"])
-            self.__cursor.commit()
+            data["has_verified_email"]))
+            self.__conn.commit()
         except Exception as e:
             self.print_error(e)
 
@@ -230,17 +228,17 @@ class RedditCrawler:
                     self.__cursor.execute("""
                 INSERT INTO achievement (achievement_name) 
                 VALUES (?)
-                """, trophy["name"])
+                """, (trophy["name"],))
                 except Exception as e:
                     pass
                 try:
                     self.__cursor.execute("""
                 INSERT INTO user_achievement (username, achievement_name) 
                 VALUES (?, ?)
-                """, username, trophy["name"])
+                """, (username, trophy["name"]))
                 except Exception as e:
                     self.print_error(e)
-                self.__cursor.commit()
+                self.__conn.commit()
         else:
             self.log(f" Do not have achievement.", "normal")
         self.log(f" Done!", "info")
@@ -286,6 +284,8 @@ class RedditCrawler:
 
             self.log(f" Got {number_user_get} users!", "info")
             time.sleep(60)  
+        
+        self.__database.close()
 
     def print_error(self, s):
         self.log(s, level="error")
@@ -294,6 +294,6 @@ class RedditCrawler:
         dt = datetime.fromtimestamp(ts, tz=timezone.utc)
         return dt.astimezone(timezone(timedelta(hours=7)))
     
-oBot = RedditCrawler()
+oBot = RedditCrawlerSQLite()
 oBot.fetch_user(100)
     
