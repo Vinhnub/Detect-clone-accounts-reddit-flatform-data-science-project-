@@ -122,16 +122,14 @@
 
 # # SageMath parsed files
 # *.sage.py
-
-# # Environments
-# #.env
-# #.venv
-# #env/
-# #venv/
-# #ENV/
-# #env.bak/
-# #venv.bak/
-
+# Environments
+# .env
+# .venv
+# env/
+# venv/
+# ENV/
+# env.bak/
+# venv.bak/
 # # Spyder project settings
 # .spyderproject
 # .spyproject
@@ -172,5 +170,5 @@
 
 # # LSP config files
 # pyrightconfig.json
+# End of https://www.toptal.com/developers/gitignore/api/python
 
-# # End of https://www.toptal.com/developers/gitignore/api/python
