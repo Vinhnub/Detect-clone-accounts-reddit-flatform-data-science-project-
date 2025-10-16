@@ -2,12 +2,11 @@ import requests
 from requests.auth import HTTPBasicAuth
 from datetime import datetime, timedelta, timezone
 import time
-import json
 from get_data.constants import *
 from termcolor import colored
 import logging
-import sqlite3
 from database.database_access import Database
+from get_data.secrets import *
 
 class RedditCrawlerSQLite:
     def __init__(self):
@@ -295,5 +294,5 @@ class RedditCrawlerSQLite:
         return dt.astimezone(timezone(timedelta(hours=7)))
     
 oBot = RedditCrawlerSQLite()
-oBot.fetch_user(100)
+oBot.fetch_user(10)
     
