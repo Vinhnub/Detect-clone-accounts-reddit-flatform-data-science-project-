@@ -1,8 +1,12 @@
+import os
+
+CLIENT_ID = os.environ["CLIENT_ID"]
+SECRET = os.environ["SECRET"]
+USERNAME = os.environ["USERNAME"]
+PASSWORD = os.environ["PASSWORD"]
+USER_AGENT = os.environ["USER_AGENT"]
+
+
 MAX_SIZE_BODY = 8000
-CLIENT_ID = "nX_QTy5GUIfPao80akP1Mw"
-SECRET = "oMjRLSYCrqvP_Uvt2pyEnIu1tOjV6g"
-USERNAME = "Strange_Buffalo_7001"
-PASSWORD = "Vinh1255@@"
-USER_AGENT = "Strange_Buffalo_7001"
 NUMBER_RETRY = 2
-LOG_FILE = "reddit_crawler.log"
+LOG_FILE = "reddit_crawler.log" 

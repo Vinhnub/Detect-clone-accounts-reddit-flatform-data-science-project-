@@ -6,7 +6,7 @@ from get_data.constants import *
 from termcolor import colored
 import logging
 from database.database_access import Database
-from get_data.secrets import *
+#from get_data.secrets import *
 
 class RedditCrawlerSQLite:
     def __init__(self):
