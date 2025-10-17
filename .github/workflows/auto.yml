@@ -2,32 +2,26 @@ name: Reddit Crawler Auto Push (Time-based DB Upload)
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # chạy mỗi ngày lúc 7h sáng VN (0h UTC)
-  workflow_dispatch:       # cho phép chạy thủ công
+    - cron: "0 0 * * *"   # mỗi ngày 7h sáng VN
+  workflow_dispatch:       # chạy thủ công nếu cần
 
 jobs:
   crawl:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          persist-credentials: false
 
-      # Cài Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      # Cài dependencies
       - name: Install dependencies
         run: pip install -r requirements.txt pydrive2
 
-      # Tạo file .db từ Reddit
-      - name: Run Reddit crawler (create .db)
+      - name: Run Reddit crawler (create timestamped .db)
         env:
           CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           SECRET: ${{ secrets.REDDIT_SECRET }}
@@ -39,40 +33,31 @@ jobs:
           timestamp=$(date '+%Y-%m-%d_%H-%M-%S')
           DB_NAME="data_${timestamp}.db"
           echo "DB_NAME=${DB_NAME}" >> $GITHUB_ENV
-          echo "📦 Creating database/${DB_NAME}"
 
           python -m get_data.reddit_crawler_to_sqlite --db "database/${DB_NAME}"
 
-          echo "✅ Created file:"
-          ls -l database/
+          echo "✅ Created database/${DB_NAME}"
 
-      # Upload lên Google Drive bằng OAuth 2.0
-      - name: Upload file to Google Drive
+      - name: Upload .db to Google Drive via OAuth2
         env:
           GDRIVE_TOKEN: ${{ secrets.GDRIVE_TOKEN }}
           GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
           DB_NAME: ${{ env.DB_NAME }}
         run: |
-          # Lưu token OAuth
           echo "${GDRIVE_TOKEN}" > credentials.json
 
           python <<'PY'
           import os
           from pydrive2.auth import GoogleAuth
           from pydrive2.drive import GoogleDrive
-          import json
 
           db_name = os.environ["DB_NAME"]
           folder_id = os.environ["GDRIVE_FOLDER_ID"]
           file_path = f"database/{db_name}"
 
-          # Load credentials từ file JSON
-          with open("credentials.json") as f:
-              cred_data = json.load(f)
-
           gauth = GoogleAuth()
-          gauth.credentials = cred_data
-          gauth.Authorize()  # Nếu access_token hết hạn, PyDrive2 tự refresh bằng refresh_token
+          gauth.LoadCredentialsFile("credentials.json")  # PyDrive2 đọc file gốc
+          gauth.Authorize()  # tự động refresh token nếu hết hạn
 
           drive = GoogleDrive(gauth)
 
