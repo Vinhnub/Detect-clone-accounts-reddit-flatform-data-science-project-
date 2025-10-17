@@ -177,5 +177,6 @@ utils/ggdrive-api-key.json
 utils/ggdrive_token.json
 utils/ggdrive_access_token.json
 database/data.db
+database/data/*.db
 
 # End of https://www.toptal.com/developers/gitignore/api/python
