@@ -7,6 +7,12 @@ from termcolor import colored
 import logging
 from database.database_access import Database
 #from get_data.secrets import *
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--db", default="database/data.db")
+args = parser.parse_args()
+
 
 class RedditCrawlerSQLite:
     def __init__(self):
@@ -15,7 +21,7 @@ class RedditCrawlerSQLite:
                        "username": USERNAME,
                        "password": PASSWORD}
         self._get_token()
-        self.__database = Database()
+        self.__database = Database(path=args.db)
         self.__conn = self.__database.get_conn()
         self.__cursor = self.__database.get_cursor()
         self.__count_time_error = 0
