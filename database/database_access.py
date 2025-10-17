@@ -14,5 +14,11 @@ class Database:
         self.__cursor.executescript(sql_script)
         self.__conn.commit()
 
+    def get_conn(self):
+        return self.__conn
+    
+    def get_cursor(self):
+        return self.__cursor
+
     def close(self):
         self.__conn.close()
