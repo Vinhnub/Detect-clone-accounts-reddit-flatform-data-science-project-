@@ -59,12 +59,8 @@ jobs:
           file_path = f"database/{db_name}"
 
           gauth = GoogleAuth()
-          gauth.ServiceAuth(settings={
-              "client_config_backend": "service",
-              "service_config": {
-                  "client_json_file_path": "service_account.json"
-              }
-          })
+          gauth.LoadSettingsFile("settings.yaml")
+          gauth.ServiceAuth()
 
           drive = GoogleDrive(gauth)
 
