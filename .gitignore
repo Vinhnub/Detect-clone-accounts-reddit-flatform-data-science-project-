@@ -173,8 +173,8 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 utils/secrets.py
-utils/ggdriver-api-key.json
-utils/ggdriver_token.json
+utils/ggdrive-api-key.json
+utils/ggdrive_token.json
 utils/ggdrive_access_token.json
 database/data.db
 

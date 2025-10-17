@@ -42,24 +42,29 @@ jobs:
           echo "✅ Created file:"
           ls -l database/
 
-      - name: Upload file to Google Drive (OAuth user)
+      - name: Upload file to Google Drive (Service Account)
         env:
-          GDRIVE_TOKEN: ${{ secrets.GDRIVE_TOKEN }}
-          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}  
+          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}  # lưu toàn bộ JSON key ở đây
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
           DB_NAME: ${{ env.DB_NAME }}
         run: |
-          echo "$GDRIVE_TOKEN" > credentials.json
+          echo "$GDRIVE_KEY" > service_account.json
           python <<'PY'
           import os
           from pydrive2.auth import GoogleAuth
           from pydrive2.drive import GoogleDrive
 
           db_name = os.environ["DB_NAME"]
-          file_path = f"database/{db_name}"
           folder_id = os.environ["GDRIVE_FOLDER_ID"]
+          file_path = f"database/{db_name}"
 
           gauth = GoogleAuth()
-          gauth.LoadCredentialsFile("credentials.json")
+          gauth.ServiceAuth(settings={
+              "client_config_backend": "service",
+              "service_config": {
+                  "client_json_file_path": "service_account.json"
+              }
+          })
 
           drive = GoogleDrive(gauth)
 
@@ -70,6 +75,7 @@ jobs:
           gfile.SetContentFile(file_path)
           gfile.Upload()
 
-          print(f"✅ upload {db_name} to folder {folder_id} success.")
+          print(f"✅ Uploaded {db_name} to folder {folder_id} successfully.")
           PY
+
 
