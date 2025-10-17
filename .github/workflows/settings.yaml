@@ -1,3 +1,0 @@
-echo "client_config_backend: service
-service_config:
-  client_json_file_path: service_account.json" > settings.yaml

@@ -3,27 +3,31 @@ name: Reddit Crawler Auto Push (Time-based DB Upload)
 on:
   schedule:
     - cron: "0 0 * * *"   # chạy mỗi ngày lúc 7h sáng VN (0h UTC)
-  workflow_dispatch:       # có thể chạy thủ công
+  workflow_dispatch:       # cho phép chạy thủ công
 
 jobs:
   crawl:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: false
 
+      # Cài Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
+      # Cài dependencies
       - name: Install dependencies
         run: pip install -r requirements.txt pydrive2
 
-      - name: Run Reddit crawler (create file .db with timestamp named)
+      # Tạo file .db từ Reddit
+      - name: Run Reddit crawler (create .db)
         env:
           CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           SECRET: ${{ secrets.REDDIT_SECRET }}
@@ -42,28 +46,33 @@ jobs:
           echo "✅ Created file:"
           ls -l database/
 
-      - name: Upload file to Google Drive (Service Account)
+      # Upload lên Google Drive bằng OAuth 2.0
+      - name: Upload file to Google Drive
         env:
-          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}
+          GDRIVE_TOKEN: ${{ secrets.GDRIVE_TOKEN }}
           GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
           DB_NAME: ${{ env.DB_NAME }}
         run: |
-          echo "$GDRIVE_KEY" > service_account.json
-          echo "client_config_backend: service
-          service_config:
-            client_json_file_path: service_account.json" > settings.yaml
+          # Lưu token OAuth
+          echo "${GDRIVE_TOKEN}" > credentials.json
 
           python <<'PY'
           import os
           from pydrive2.auth import GoogleAuth
           from pydrive2.drive import GoogleDrive
+          import json
 
           db_name = os.environ["DB_NAME"]
           folder_id = os.environ["GDRIVE_FOLDER_ID"]
           file_path = f"database/{db_name}"
 
+          # Load credentials từ file JSON
+          with open("credentials.json") as f:
+              cred_data = json.load(f)
+
           gauth = GoogleAuth()
-          gauth.ServiceAuth()  # Tự động đọc settings.yaml trong thư mục hiện tại
+          gauth.credentials = cred_data
+          gauth.Authorize()  # Nếu access_token hết hạn, PyDrive2 tự refresh bằng refresh_token
 
           drive = GoogleDrive(gauth)
 
@@ -76,5 +85,3 @@ jobs:
 
           print(f"✅ Uploaded {db_name} to folder {folder_id} successfully.")
           PY
-
-
