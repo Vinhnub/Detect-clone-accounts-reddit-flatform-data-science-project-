@@ -43,9 +43,25 @@ jobs:
           GDRIVE_TOKEN: ${{ secrets.GDRIVE_TOKEN }}
           GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
           DB_NAME: ${{ env.DB_NAME }}
+          CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
         run: |
+          # 🗂️ create file credentials.json from secret GDRIVE_TOKEN (JSON đầy đủ có access_token, refresh_token...)
           echo "${GDRIVE_TOKEN}" > credentials.json
 
+          # 🧾 create file settings.yaml to PyDrive2 know client_id, client_secret
+          echo "client_config_backend: settings" > settings.yaml
+          echo "client_config:" >> settings.yaml
+          echo "  client_id: ${CLIENT_ID}" >> settings.yaml
+          echo "  client_secret: ${CLIENT_SECRET}" >> settings.yaml
+          echo "save_credentials: True" >> settings.yaml
+          echo "save_credentials_backend: file" >> settings.yaml
+          echo "save_credentials_file: credentials.json" >> settings.yaml
+          echo "get_refresh_token: True" >> settings.yaml
+          echo "oauth_scope:" >> settings.yaml
+          echo "  - https://www.googleapis.com/auth/drive" >> settings.yaml
+
+          # 🐍 run script upload file to Google Drive
           python <<'PY'
           import os
           from pydrive2.auth import GoogleAuth
@@ -56,8 +72,14 @@ jobs:
           file_path = f"database/{db_name}"
 
           gauth = GoogleAuth()
-          gauth.LoadCredentialsFile("credentials.json")  # PyDrive2 đọc file gốc
-          gauth.Authorize()  # tự động refresh token nếu hết hạn
+          gauth.LoadCredentialsFile("credentials.json")
+
+          if gauth.access_token_expired:
+              gauth.Refresh()
+          else:
+              gauth.Authorize()
+
+          gauth.SaveCredentialsFile("credentials.json")
 
           drive = GoogleDrive(gauth)
 
