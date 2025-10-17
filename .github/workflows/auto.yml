@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pydrive2
 
-      - name: Run Reddit crawler (tạo file .db với tên thời gian)
+      - name: Run Reddit crawler (create file .db with timestamp named)
         env:
           CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           SECRET: ${{ secrets.REDDIT_SECRET }}
@@ -37,38 +37,39 @@ jobs:
           echo "DB_NAME=${DB_NAME}" >> $GITHUB_ENV
           echo "📦 Đang tạo database/${DB_NAME}"
 
-          # chạy script crawler, truyền tên file vào
           python -m get_data.reddit_crawler_to_sqlite --db "database/${DB_NAME}"
 
           echo "✅ Đã tạo file:"
           ls -l database/
 
-      - name: Upload file lên Google Drive
+      - name: Upload file to Google Drive
         env:
           GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
           DB_NAME: ${{ env.DB_NAME }}
         run: |
           echo "$GDRIVE_CREDENTIALS" > creds.json
           python <<'PY'
-          import os
+          import os, yaml
           from pydrive2.auth import GoogleAuth
           from pydrive2.drive import GoogleDrive
 
           db_name = os.environ["DB_NAME"]
           file_path = f"database/{db_name}"
 
-          if not os.path.exists(file_path):
-              print(f"❌ Không tìm thấy file: {file_path}")
-              print("📁 Thư mục database:", os.listdir("database"))
-              raise SystemExit(1)
+          # Tạo file cấu hình cho PyDrive2 (Service Account)
+          with open("settings.yaml", "w") as f:
+              yaml.dump({
+                  "client_config_backend": "service",
+                  "service_config": {
+                      "client_json_file_path": "creds.json"
+                  }
+              }, f)
 
-          # ✅ Xác thực bằng service account
           gauth = GoogleAuth()
-          gauth.LoadClientConfigFile("creds.json")  # chuẩn cho PyDrive2
           gauth.ServiceAuth()
           drive = GoogleDrive(gauth)
 
-          # Upload file
+          # Upload
           gfile = drive.CreateFile({"title": db_name})
           gfile.SetContentFile(file_path)
           gfile.Upload()
