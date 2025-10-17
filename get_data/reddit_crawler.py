@@ -3,11 +3,10 @@ from requests.auth import HTTPBasicAuth
 from datetime import datetime, timedelta, timezone
 import time
 import json
-from constants import *
 from termcolor import colored
 import pyodbc 
 import logging
-from get_data.secrets import *
+from utils.secrets import *
 
 class RedditCrawler:
     def __init__(self):

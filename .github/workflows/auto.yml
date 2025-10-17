@@ -62,20 +62,17 @@ jobs:
               print("📁 Thư mục database:", os.listdir("database"))
               raise SystemExit(1)
 
-          # Xác thực service account
+          # ✅ Xác thực bằng service account
           gauth = GoogleAuth()
-          gauth.LoadServiceConfigFile("creds.json")
-          try:
-              gauth.ServiceAuth()
-          except Exception:
-              gauth.LoadCredentialsFile("creds.json")
-
+          gauth.LoadClientConfigFile("creds.json")  # chuẩn cho PyDrive2
+          gauth.ServiceAuth()
           drive = GoogleDrive(gauth)
 
-          # Upload với tên chứa timestamp
+          # Upload file
           gfile = drive.CreateFile({"title": db_name})
           gfile.SetContentFile(file_path)
           gfile.Upload()
 
           print(f"✅ Đã upload {db_name} lên Google Drive thành công.")
           PY
+
