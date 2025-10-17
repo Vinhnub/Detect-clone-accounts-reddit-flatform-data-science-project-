@@ -172,6 +172,8 @@ poetry.toml
 
 # LSP config files
 pyrightconfig.json
-get_data/secrets.py
+utils/secrets.py
+utils/ggdriver-api-key.json
+database/data.db
 
 # End of https://www.toptal.com/developers/gitignore/api/python

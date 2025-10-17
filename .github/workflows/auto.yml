@@ -1,4 +1,4 @@
-name: Reddit Crawler Auto Push
+name: Reddit Crawler Auto Push to Google Drive
 
 on:
   schedule:
@@ -13,39 +13,58 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: false  # cần thiết để tự config lại quyền push
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt pydrive2
 
-      - name: Run Reddit crawler
+      - name: Run Reddit crawler (tạo file .db)
         env:
           CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           SECRET: ${{ secrets.REDDIT_SECRET }}
           USERNAME: ${{ secrets.REDDIT_USERNAME }}
           PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
           USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
-        run: python -m get_data.reddit_crawler_to_sqlite
-
-      - name: Commit and push updated database
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p database
+          timestamp=$(date '+%Y-%m-%d_%H-%M-%S')
+          export DB_NAME="data_${timestamp}.db"
+          echo "Database file name: $DB_NAME"
+          python -m get_data.reddit_crawler_to_sqlite --db "database/$DB_NAME"
+          echo "DB_NAME=$DB_NAME" >> $GITHUB_ENV  # lưu để bước sau dùng lại
 
-          # Kiểm tra có thay đổi không
-          if [ -n "$(git status --porcelain database/data.db)" ]; then
-            git add database/data.db
-            git commit -m "Update data.db automatically on $(date '+%Y-%m-%d %H:%M:%S')"
-            git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
-          else
-            echo "No changes in data.db, skipping commit."
-          fi
+      - name: Upload file lên Google Drive
+        env:
+          GDRIVE_CREDENTIALS: ${{ secrets.GDRIVE_CREDENTIALS }}
+          DB_NAME: ${{ env.DB_NAME }}
+        run: |
+          echo "$GDRIVE_CREDENTIALS" > creds.json
+          python <<'EOF'
+          import os
+          from pydrive2.auth import GoogleAuth
+          from pydrive2.drive import GoogleDrive
+          import datetime
+
+          creds_file = "creds.json"
+          db_name = os.environ["DB_NAME"]
+          file_path = f"database/{db_name}"
+
+          if not os.path.exists(file_path):
+              raise FileNotFoundError(f"Không tìm thấy {file_path}")
+
+          # Xác thực Google Drive
+          gauth = GoogleAuth()
+          gauth.LoadCredentialsFile(creds_file)
+          drive = GoogleDrive(gauth)
+
+          # Upload file
+          gfile = drive.CreateFile({"title": db_name})
+          gfile.SetContentFile(file_path)
+          gfile.Upload()
+          print(f"✅ Đã upload {db_name} lên Google Drive thành công.")
+          EOF
