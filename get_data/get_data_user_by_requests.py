@@ -6,7 +6,7 @@ import json
 from constants import *
 from termcolor import colored
 import pyodbc 
-from get_data.secrets import *
+from utils.secrets import *
 
 
 auth = HTTPBasicAuth(CLIENT_ID, SECRET)
