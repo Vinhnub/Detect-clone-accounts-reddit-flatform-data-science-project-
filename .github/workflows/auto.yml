@@ -1,9 +1,9 @@
-name: Reddit Crawler Auto Push to Google Drive
+name: Reddit Crawler Auto Push (Time-based DB Upload)
 
 on:
   schedule:
-    - cron: "0 0 * * *"    # chạy mỗi ngày lúc 7h sáng VN (0h UTC)
-  workflow_dispatch:        # cho phép chạy thủ công
+    - cron: "0 0 * * *"   # chạy mỗi ngày lúc 7h sáng VN (0h UTC)
+  workflow_dispatch:       # có thể chạy thủ công
 
 jobs:
   crawl:
@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pydrive2
 
-      - name: Run Reddit crawler (tạo file .db)
+      - name: Run Reddit crawler (tạo file .db với tên thời gian)
         env:
           CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           SECRET: ${{ secrets.REDDIT_SECRET }}
@@ -33,10 +33,15 @@ jobs:
         run: |
           mkdir -p database
           timestamp=$(date '+%Y-%m-%d_%H-%M-%S')
-          export DB_NAME="data_${timestamp}.db"
-          echo "Database file name: $DB_NAME"
-          python -m get_data.reddit_crawler_to_sqlite --db "database/$DB_NAME"
-          echo "DB_NAME=$DB_NAME" >> $GITHUB_ENV  # lưu để bước sau dùng lại
+          DB_NAME="data_${timestamp}.db"
+          echo "DB_NAME=${DB_NAME}" >> $GITHUB_ENV
+          echo "📦 Đang tạo database/${DB_NAME}"
+
+          # chạy script crawler, truyền tên file vào
+          python -m get_data.reddit_crawler_to_sqlite --db "database/${DB_NAME}"
+
+          echo "✅ Đã tạo file:"
+          ls -l database/
 
       - name: Upload file lên Google Drive
         env:
@@ -44,27 +49,33 @@ jobs:
           DB_NAME: ${{ env.DB_NAME }}
         run: |
           echo "$GDRIVE_CREDENTIALS" > creds.json
-          python <<'EOF'
+          python <<'PY'
           import os
           from pydrive2.auth import GoogleAuth
           from pydrive2.drive import GoogleDrive
-          import datetime
 
-          creds_file = "creds.json"
           db_name = os.environ["DB_NAME"]
           file_path = f"database/{db_name}"
 
           if not os.path.exists(file_path):
-              raise FileNotFoundError(f"Không tìm thấy {file_path}")
+              print(f"❌ Không tìm thấy file: {file_path}")
+              print("📁 Thư mục database:", os.listdir("database"))
+              raise SystemExit(1)
 
-          # Xác thực Google Drive
+          # Xác thực service account
           gauth = GoogleAuth()
-          gauth.LoadCredentialsFile(creds_file)
+          gauth.LoadServiceConfigFile("creds.json")
+          try:
+              gauth.ServiceAuth()
+          except Exception:
+              gauth.LoadCredentialsFile("creds.json")
+
           drive = GoogleDrive(gauth)
 
-          # Upload file
+          # Upload với tên chứa timestamp
           gfile = drive.CreateFile({"title": db_name})
           gfile.SetContentFile(file_path)
           gfile.Upload()
+
           print(f"✅ Đã upload {db_name} lên Google Drive thành công.")
-          EOF
+          PY
