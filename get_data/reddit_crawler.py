@@ -20,7 +20,7 @@ class RedditCrawler:
                       "Database=spam_account_detect_database;"
                       "Trusted_Connection=yes;")
         self.__cursor = cnxn.cursor()
-        self.__count_time_404 = 0
+        self.__time_error = 0
         logging.basicConfig(
             filename=LOG_FILE,
             level=logging.INFO,
@@ -82,10 +82,10 @@ class RedditCrawler:
                 self.print_error(f"{r.status_code} {r.text}")
                 if r.status_code == 401:
                     self._get_token()
-                if r.status_code == 404:
-                    self.__count_time_404 += 1
-                    if self.__count_time_404 >= NUMBER_RETRY:
-                        self.__count_time_404 = 0
+                if r.status_code == 404 or r.status_code == 400:
+                    self.__time_error += 1
+                    if self.__time_error >= NUMBER_RETRY:
+                        self.__time_error = 0
                         self.print_error(f" Error!")
                         return all_items
                 time.sleep(60)
@@ -170,10 +170,10 @@ class RedditCrawler:
                 self.print_error(f"{r.status_code} {r.text}")
                 if r.status_code == 401:
                     self._get_token()
-                if r.status_code == 404:
-                    self.__count_time_404 += 1
-                    if self.__count_time_404 == NUMBER_RETRY:
-                        self.__count_time_404 = 0
+                if r.status_code == 404 or r.status_code == 400 or r.status_code == 400:
+                    self.__time_error += 1
+                    if self.__time_error == NUMBER_RETRY:
+                        self.__time_error = 0
                         self.print_error(f" Error!")
                         return
                 time.sleep(60)
@@ -210,10 +210,10 @@ class RedditCrawler:
                 self.print_error(f"{r.status_code} {r.text}")
                 if r.status_code == 401:
                     self._get_token()
-                if r.status_code == 404:
-                    self.__count_time_404 += 1
-                    if self.__count_time_404 == NUMBER_RETRY:
-                        self.__count_time_404 = 0
+                if r.status_code == 404 or r.status_code == 400:
+                    self.__time_error += 1
+                    if self.__time_error == NUMBER_RETRY:
+                        self.__time_error = 0
                         self.print_error(f"Error!")
                         return   
                 time.sleep(60)

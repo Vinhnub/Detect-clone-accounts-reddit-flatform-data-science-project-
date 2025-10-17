@@ -175,7 +175,7 @@ pyrightconfig.json
 utils/secrets.py
 utils/ggdriver-api-key.json
 utils/ggdriver_token.json
-utils/credentials.json
+utils/ggdrive_access_token.json
 database/data.db
 
 # End of https://www.toptal.com/developers/gitignore/api/python
