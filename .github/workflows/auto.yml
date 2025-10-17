@@ -44,11 +44,15 @@ jobs:
 
       - name: Upload file to Google Drive (Service Account)
         env:
-          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}  # lưu toàn bộ JSON key ở đây
+          GDRIVE_KEY: ${{ secrets.GDRIVE_KEY }}
           GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
           DB_NAME: ${{ env.DB_NAME }}
         run: |
           echo "$GDRIVE_KEY" > service_account.json
+          echo "client_config_backend: service
+          service_config:
+            client_json_file_path: service_account.json" > settings.yaml
+
           python <<'PY'
           import os
           from pydrive2.auth import GoogleAuth
@@ -59,8 +63,7 @@ jobs:
           file_path = f"database/{db_name}"
 
           gauth = GoogleAuth()
-          gauth.LoadSettingsFile("settings.yaml")
-          gauth.ServiceAuth()
+          gauth.ServiceAuth()  # Tự động đọc settings.yaml trong thư mục hiện tại
 
           drive = GoogleDrive(gauth)
 
