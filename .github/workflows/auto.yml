@@ -35,16 +35,17 @@ jobs:
           timestamp=$(date '+%Y-%m-%d_%H-%M-%S')
           DB_NAME="data_${timestamp}.db"
           echo "DB_NAME=${DB_NAME}" >> $GITHUB_ENV
-          echo "📦 Đang tạo database/${DB_NAME}"
+          echo "📦 Creating database/${DB_NAME}"
 
           python -m get_data.reddit_crawler_to_sqlite --db "database/${DB_NAME}"
 
-          echo "✅ Đã tạo file:"
+          echo "✅ Created file:"
           ls -l database/
 
       - name: Upload file to Google Drive (OAuth user)
         env:
           GDRIVE_TOKEN: ${{ secrets.GDRIVE_TOKEN }}
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}  
           DB_NAME: ${{ env.DB_NAME }}
         run: |
           echo "$GDRIVE_TOKEN" > credentials.json
@@ -55,17 +56,20 @@ jobs:
 
           db_name = os.environ["DB_NAME"]
           file_path = f"database/{db_name}"
+          folder_id = os.environ["GDRIVE_FOLDER_ID"]
 
           gauth = GoogleAuth()
-          # Load token từ secret
           gauth.LoadCredentialsFile("credentials.json")
 
           drive = GoogleDrive(gauth)
 
-          # Upload file
-          gfile = drive.CreateFile({"title": db_name})
+          gfile = drive.CreateFile({
+              "title": db_name,
+              "parents": [{"id": folder_id}]
+          })
           gfile.SetContentFile(file_path)
           gfile.Upload()
 
-          print(f"✅ Đã upload {db_name} lên Google Drive thành công.")
+          print(f"✅ upload {db_name} to folder {folder_id} success.")
           PY
+
