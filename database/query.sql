@@ -7,14 +7,14 @@
 -- 	verified_email bit not null
 -- );
 
--- create table achiverment (
--- 	achiverment_name varchar(50) primary key
+-- create table achievement (
+-- 	achievement_name varchar(50) primary key
 -- )
 
--- create table user_achiverment (
+-- create table user_achievement (
 -- 	username varchar(30) not null references r_user(username),
--- 	achiverment_name varchar(50) not null references achiverment(achiverment_name),
--- 	constraint u_a primary key (username, achiverment_name)
+-- 	achievement_name varchar(50) not null references achievement(achievement_name),
+-- 	constraint u_a primary key (username, achievement_name)
 -- )
 
 -- create table post (
@@ -22,7 +22,7 @@
 -- 	subreddit varchar(30) not null,
 -- 	title nvarchar(400) not null,
 -- 	content nvarchar(MAX),
--- 	p_url varchar(1000) not null,
+-- 	p_url varchar(MAX) not null,
 -- 	score int not null,
 -- 	created datetime not null,
 -- 	username varchar(30) not null references r_user(username)
@@ -39,8 +39,8 @@
 
 -- drop table comment
 -- drop table post
--- drop table user_achiverment
--- drop table achiverment
+-- drop table user_achievement
+-- drop table achievement
 -- drop table r_user
 
 -- select username, count(username) as number_user
@@ -49,7 +49,7 @@
 -- group by username
 
 
--- select * 
+-- select count(*)
 -- from r_user
 
 
