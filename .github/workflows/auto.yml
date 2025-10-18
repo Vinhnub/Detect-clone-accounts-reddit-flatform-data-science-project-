@@ -2,8 +2,8 @@ name: Reddit Crawler Auto Push (Time-based DB Upload)
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # mỗi ngày 7h sáng VN
-  workflow_dispatch:       # chạy thủ công nếu cần
+    - cron: "0 0 * * *"  
+  workflow_dispatch:       
 
 jobs:
   crawl:
@@ -36,7 +36,7 @@ jobs:
 
           python -m get_data.reddit_crawler_to_sqlite --db "database/${DB_NAME}"
 
-          echo "✅ Created database/${DB_NAME}"
+          echo "Created database/${DB_NAME}"
 
       - name: Upload .db to Google Drive via OAuth2
         env:
@@ -46,10 +46,10 @@ jobs:
           CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
         run: |
-          # 🗂️ create file credentials.json from secret GDRIVE_TOKEN (JSON đầy đủ có access_token, refresh_token...)
+          # Create file credentials.json from secret GDRIVE_TOKEN (JSON đầy đủ có access_token, refresh_token...)
           echo "${GDRIVE_TOKEN}" > credentials.json
 
-          # 🧾 create file settings.yaml to PyDrive2 know client_id, client_secret
+          # Create file settings.yaml to PyDrive2 know client_id, client_secret
           echo "client_config_backend: settings" > settings.yaml
           echo "client_config:" >> settings.yaml
           echo "  client_id: ${CLIENT_ID}" >> settings.yaml
@@ -90,5 +90,5 @@ jobs:
           gfile.SetContentFile(file_path)
           gfile.Upload()
 
-          print(f"✅ Uploaded {db_name} to folder {folder_id} successfully.")
+          print(f"Uploaded {db_name} to folder {folder_id} successfully.")
           PY

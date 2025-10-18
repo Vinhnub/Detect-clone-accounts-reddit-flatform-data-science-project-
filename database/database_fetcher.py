@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import time
+import sqlite3
 import json
 from get_data.constants import *
 from database.database_access import Database
@@ -9,17 +10,46 @@ import pandas as pd
 import matplotlib.pyplot as plt 
 
 class DatabaseFetcher:
-    def __init__(self, isSqlite=False):
+    def __init__(self):
         self.__sqlite_database = Database()
         self.__cnxn = pyodbc.connect("Driver={ODBC Driver 17 for SQL Server};"
                       "Server=VINHNUB\SQLEXPRESS;"
                       "Database=spam_account_detect_database;"
-                      "Trusted_Connection=yes;") if not isSqlite else self.__sqlite_database.get_conn()
+                      "Trusted_Connection=yes;") 
         self.__cursor = self.__cnxn.cursor()
         self.__r_user_table = pd.read_sql("select * from r_user", self.__cnxn) # parse_dates=["created"], index_col="created"
         self.__user_achievement_table = pd.read_sql("select * from user_achievement", self.__cnxn)
         self.__post_table = pd.read_sql("select * from post", self.__cnxn) # parse_dates=["created"], index_col="created"
         self.__comment_table = pd.read_sql("select * from comment", self.__cnxn) # parse_dates=["created"], index_col="created"
+
+    def import_from_sqlite_folder(self, folder_path: str):
+        count_files = 0
+        for filename in os.listdir(folder_path):
+            if filename.endswith(".db"):
+                count_files += 1
+                db_path = os.path.join(folder_path, filename)
+                try:
+                    sqlite_conn = sqlite3.connect(db_path)
+                    tables = pd.read_sql_query(
+                        "SELECT name FROM sqlite_master WHERE type='table';",
+                        sqlite_conn
+                    )
+
+                    for table_name in tables["name"]:
+                        try:
+                            df = pd.read_sql_query(f"SELECT * FROM {table_name}", sqlite_conn)
+                            df.to_sql(table_name, self.__cnxn, if_exists='append', index=False)
+                        except Exception as e:
+                            print(e)
+                    sqlite_conn.close()
+
+                except Exception as e:
+                    print(e)
+
+        if count_files == 0:
+            print("Cannot found any file .db")
+        else:
+            print(f"✅ Hoàn thành import dữ liệu từ {count_files} file.")
 
 
     def get_r_user_table(self):
@@ -40,7 +70,7 @@ class DatabaseFetcher:
         print(f"post: {len(self.__post_table)}")
         print(f"comment: {len(self.__comment_table)}")
 
-oData = DatabaseFetcher(isSqlite=True)
+oData = DatabaseFetcher()
 
 comments = oData.get_comment_table()
 posts = oData.get_post_table()
