@@ -2,7 +2,7 @@ name: Reddit Crawler Auto Push (Time-based DB Upload)
 
 on:
   schedule:
-    - cron: "0 0 * * *"  
+    - cron: "0 */6 * * *"
   workflow_dispatch:       
 
 jobs:

@@ -33,68 +33,87 @@ class DatabaseFetcher:
     def import_from_sqlite_folder(self, folder_path: str):
         count_files = 0
         for filename in os.listdir(folder_path):
-            if filename.endswith(".db"):
-                count_files += 1
-                db_path = os.path.join(folder_path, filename)
-                print(f"\n==============================")
-                print(f"🔹 Import from file: {filename}")
-                print(f"==============================")
+            if not filename.endswith(".db"):
+                continue
 
-                try:
-                    sqlite_conn = sqlite3.connect(db_path)
-                    tables = pd.read_sql_query(
-                        "SELECT name FROM sqlite_master WHERE type='table';",
-                        sqlite_conn
-                    )["name"].tolist()
+            count_files += 1
+            db_path = os.path.join(folder_path, filename)
+            print(f"\n==============================")
+            print(f"🔹 Import from file: {filename}")
+            print(f"==============================")
 
-                    import_order = ["r_user", "achievement", "post", "comment", "user_achievement"]
+            try:
+                sqlite_conn = sqlite3.connect(db_path)
+                tables = pd.read_sql_query(
+                    "SELECT name FROM sqlite_master WHERE type='table';", sqlite_conn
+                )["name"].tolist()
 
-                    for table_name in import_order:
-                        if table_name not in tables:
-                            continue 
+                import_order = ["r_user", "achievement", "post", "comment", "user_achievement"]
 
-                        try:
-                            df = pd.read_sql_query(f"SELECT * FROM {table_name}", sqlite_conn)
+                for table_name in import_order:
+                    if table_name not in tables:
+                        continue
 
-                            if table_name == "r_user" and "username" in df.columns:
-                                existing = pd.read_sql("SELECT username FROM r_user", self.__cnxn)
-                                df = df[~df["username"].isin(existing["username"])]
+                    try:
+                        df = pd.read_sql_query(f"SELECT * FROM {table_name}", sqlite_conn)
 
-                            elif table_name == "achievement" and "achievement_name" in df.columns:
-                                existing = pd.read_sql("SELECT achievement_name FROM achievement", self.__cnxn)
-                                df = df[~df["achievement_name"].isin(existing["achievement_name"])]
+                        if table_name == "r_user" and "username" in df.columns:
+                            existing = pd.read_sql("SELECT username FROM r_user", self.__cnxn)
+                            df = df[~df["username"].isin(existing["username"])]
 
-                            elif table_name == "post" and "id" in df.columns:
-                                existing = pd.read_sql("SELECT id FROM post", self.__cnxn)
-                                df = df[~df["id"].isin(existing["id"])]
+                        elif table_name == "achievement" and "achievement_name" in df.columns:
+                            existing = pd.read_sql("SELECT achievement_name FROM achievement", self.__cnxn)
+                            df = df[~df["achievement_name"].isin(existing["achievement_name"])]
 
-                            elif table_name == "comment" and "id" in df.columns:
-                                existing = pd.read_sql("SELECT id FROM comment", self.__cnxn)
-                                df = df[~df["id"].isin(existing["id"])]
+                        elif table_name == "post" and "id" in df.columns:
+                            existing = pd.read_sql("SELECT id FROM post", self.__cnxn)
+                            df = df[~df["id"].isin(existing["id"])]
 
-                            elif table_name == "user_achievement" and {"username", "achievement_name"}.issubset(df.columns):
-                                existing = pd.read_sql("SELECT username, achievement_name FROM user_achievement", self.__cnxn)
-                                merged = df.merge(existing, on=["username", "achievement_name"], how="left", indicator=True)
-                                df = merged[merged["_merge"] == "left_only"].drop(columns="_merge")
+                        elif table_name == "comment" and "id" in df.columns:
+                            existing = pd.read_sql("SELECT id FROM comment", self.__cnxn)
+                            df = df[~df["id"].isin(existing["id"])]
 
-                            if len(df) > 0:
-                                df.to_sql(table_name, self.__engine, if_exists='append', index=False)
-                                print(f"✅ Imported {len(df)} rows to table {table_name}")
-                            else:
-                                print(f"⚠️ Do not have data for table {table_name}")
+                        elif table_name == "user_achievement" and {"username", "achievement_name"}.issubset(df.columns):
+                            existing = pd.read_sql("SELECT username, achievement_name FROM user_achievement", self.__cnxn)
+                            merged = df.merge(existing, on=["username", "achievement_name"], how="left", indicator=True)
+                            df = merged[merged["_merge"] == "left_only"].drop(columns="_merge")
 
-                        except Exception as e:
-                            print(f"❌ Error import table {table_name}: {e}")
+                            valid_users = pd.read_sql("SELECT username FROM r_user", self.__cnxn)["username"].tolist()
+                            valid_achievements = pd.read_sql("SELECT achievement_name FROM achievement", self.__cnxn)["achievement_name"].tolist()
 
-                    sqlite_conn.close()
+                            invalid_users = df[~df["username"].isin(valid_users)]
+                            invalid_achievements = df[~df["achievement_name"].isin(valid_achievements)]
 
-                except Exception as e:
-                    print(f"❌ Error read file {filename}: {e}")
+                            if not invalid_users.empty:
+                                print(f"⚠️ Skipped {len(invalid_users)} rows in user_achievement: username not found in r_user")
+
+                            if not invalid_achievements.empty:
+                                print(f"⚠️ Skipped {len(invalid_achievements)} rows in user_achievement: achievement_name not found in achievement")
+
+                            df = df[
+                                df["username"].isin(valid_users)
+                                & df["achievement_name"].isin(valid_achievements)
+                            ]
+
+                        if len(df) > 0:
+                            df.to_sql(table_name, self.__engine, if_exists="append", index=False)
+                            print(f"✅ Imported {len(df)} rows to table {table_name}")
+                        else:
+                            print(f"⚠️ Do not have data for table {table_name}")
+
+                    except Exception as e:
+                        print(f"❌ Error import table {table_name}: {e}")
+
+                sqlite_conn.close()
+
+            except Exception as e:
+                print(f"❌ Error read file {filename}: {e}")
 
         if count_files == 0:
-            print("⚠️ Cannot found anyfile.")
+            print("⚠️ Cannot found any .db file.")
         else:
-            print(f"\n🎯 Successfully import {count_files} file SQLite.")
+            print(f"\n🎯 Successfully processed {count_files} SQLite file(s).")
+
 
 
     def get_r_user_table(self):
