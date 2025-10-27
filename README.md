@@ -6,7 +6,7 @@
 
 🚀 Features:
 
-    + 🧩 Collect user and post data from the Reddit API.
+    + 🧩 Collect user and post data from the Reddit API (Automaticly).
 
     + 🧮 Data preprocessing and cleaning (remove duplicates, normalize values).
 
@@ -116,7 +116,15 @@
                         "client_secret": "YOUR_CLIENT_SECRET",
                         "user_agent": "RedditSpamDetector/1.0"
                         }
+    
+    5️⃣ Set up and connect to database (SQL-Server), run file reddit_crawler.py 
 
+⚙️ Installation Automatic:
+    1️⃣ Set up file .yml for github action. 
+
+    2️⃣ Get and set up Google API to access Google Drive
+
+    3️⃣ Use github action to run file reddit_crawler_to_sqlite.py
 
 🤝 Contributing:
 
