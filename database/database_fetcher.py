@@ -121,23 +121,23 @@ class DatabaseFetcher:
 
 
 
-    # def get_r_user_table(self):
-    #     return self.__r_user_table
+#     def get_r_user_table(self):
+#         return self.__r_user_table
     
-    # def get_user_achievement_table(self):
-    #     return self.__user_achievement_table
+#     def get_user_achievement_table(self):
+#         return self.__user_achievement_table
     
-    # def get_post_table(self):
-    #     return self.__post_table
+#     def get_post_table(self):
+#         return self.__post_table
     
-    # def get_comment_table(self):
-    #     return self.__comment_table
+#     def get_comment_table(self):
+#         return self.__comment_table
     
-    # def get_size(self):
-    #     print(f"user_achievement: {len(self.__user_achievement_table)}")
-    #     print(f"r_user: {len(self.__r_user_table)}")
-    #     print(f"post: {len(self.__post_table)}")
-    #     print(f"comment: {len(self.__comment_table)}")
+#     def get_size(self):
+#         print(f"user_achievement: {len(self.__user_achievement_table)}")
+#         print(f"r_user: {len(self.__r_user_table)}")
+#         print(f"post: {len(self.__post_table)}")
+#         print(f"comment: {len(self.__comment_table)}")
 
 # oData = DatabaseFetcher()
 
