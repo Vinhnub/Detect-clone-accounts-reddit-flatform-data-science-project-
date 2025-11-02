@@ -19,75 +19,78 @@
 
 🗂️ Project Structure:
 
-    ```
-    
-    ├── 📁 .git/ 🚫 (auto-hidden)
 
-    ├── 📁 .github/
+```
 
-    │   └── 📁 workflows/
+├── 📁 .github
+│   └── 📁 workflows
+│       └── ⚙️ auto.yml
+├── 📁 crawReditRender
+│   ├── 📁 data
+│   │   └── ⚙️ .gitkeep
+│   ├── 📝 README.md
+│   ├── 🐍 app.py
+│   ├── 🐍 reddit_crawler.py
+│   └── 📄 requirements.txt
+├── 📁 data_prepare
+│   ├── 📁 Huy
+│   │   ├── 🖼️ heat_map_activate_comment.png
+│   │   ├── 🖼️ heat_map_activate_post.png
+│   │   ├── 🐍 heatmap_activate_week_post_comment.py.py
+│   │   ├── 🖼️ scatter_post_link_karma.png
+│   │   └── 🐍 scratter_postScore_karma.py.py
+│   ├── 📁 Kiet
+│   │   ├── 🖼️ Figure_1.png
+│   │   ├── 🖼️ Figure_2.png
+│   │   ├── 🐍 Verified_and_Premium_rate.py
+│   │   ├── 🐍 __init__.py
+│   │   └── 🐍 account_created_chart.py
+│   ├── 📁 Trung
+│   │   ├── 🖼️ Figure_1.png
+│   │   ├── 🖼️ Figure_2.png
+│   │   ├── 🖼️ Figure_3.png
+│   │   └── 🐍 Lab.py
+│   ├── 📁 Vinh
+│   │   ├── 🐍 __init__.py
+│   │   ├── 🐍 correlation_comment_and_post_karma.py
+│   │   ├── 🖼️ distribute_comment_duplicate_score.png
+│   │   ├── 🖼️ distribute_post_duplicate_score.png
+│   │   ├── 🐍 duplicate_ratio_calculate.py
+│   │   ├── 📄 duplicate_score.csv
+│   │   ├── 🖼️ duplicate_score_distribute_plot.png
+│   │   ├── 🐍 duplicate_statistic.py
+│   │   ├── 📄 duplicate_statistic.txt
+│   │   ├── 🖼️ relationship_comment_and_post_karma.png
+│   │   └── 🖼️ relationship_post_and_comment_duplicate_score.png
+│   └── 📁 viewUserDuplicates
+│       ├── 🖼️ result.png
+│       └── 🐍 viewUserDuplicates.py
+├── 📁 database
+│   ├── 📁 data
+│   ├── 📁 image
+│   │   ├── 🖼️ ERD.png
+│   │   └── 🖼️ diagram.png
+│   ├── 📁 new_data
+│   ├── 🐍 __init__.py
+│   ├── 🐍 data_mixer.py
+│   ├── 🐍 database_access.py
+│   ├── 🐍 database_fetcher.py
+│   └── 📄 query.sql
+├── 📁 get_data
+│   ├── 🐍 __init__.py
+│   ├── 🐍 constants.py
+│   ├── 🐍 reddit_crawler.py
+│   └── 🐍 reddit_crawler_to_sqlite.py
+├── 📁 utils
+│   └── 🐍 __init__.py
+├── ⚙️ .gitignore
+├── 📘 ContentLAB_4_5.docx
+├── 📝 README.md
+├── 🐍 auth.py
+└── 📄 requirements.txt
+```
 
-    │       ├── ⚙️ auto.yml
-
-    │       └── ⚙️ settings.yaml
-
-    ├── 📁 crawReditRender/
-
-    │   ├── 🐍 crawRedit.py
-
-    │   └── 📄 requirements.txt
-
-    ├── 📁 database/
-
-    │   ├── 📁 image/
-
-    │   │   ├── 🖼️ ERD.png
-
-    │   │   └── 🖼️ diagram.png
-
-    │   ├── 🐍 __init__.py
-
-    │   ├── 🐍 database_access.py
-
-    │   └── 🗄️ query.sql
-
-    ├── 📁 get_data/
-
-    │   ├── 🐍 __init__.py
-
-    │   ├── 🐍 auth.py
-
-    │   ├── 🐍 constants.py
-
-    │   ├── 🐍 database_fetcher.p
-    y
-    │   ├── 🐍 get_data_user_by_requests.py
-
-    │   ├── 🐍 reddit_crawler.py
-
-    │   └── 🐍 reddit_crawler_to_sqlite.py
-
-    ├── 📁 utils/
-
-    │   ├── 🐍 __init__.py
-
-    │   ├── 📄 ggdrive-api-key.json 🚫 (auto-hidden)
-
-    │   ├── 📄 ggdrive_access_token.json 🚫 (auto-hidden)
-
-    │   ├── 📄 ggdrive_token.json 🚫 (auto-hidden)
-
-    │   └── 🐍 secrets.py 🚫 (auto-hidden)
-
-    ├── 🚫 .gitignore
-
-    ├── 📖 README.md
-
-    └── 📄 requirements.txt
-
-    ```
-
-    ---
+---
 
 
 ⚙️ Installation:
