@@ -49,7 +49,7 @@
 -- group by username
 
 
--- select count(*)
+-- select *
 -- from r_user
 
 
