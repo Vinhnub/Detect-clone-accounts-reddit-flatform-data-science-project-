@@ -14,11 +14,11 @@ conn_str = (
 )
 
 with pyodbc.connect(conn_str) as conn:
-    df = pd.read_sql("SELECT created FROM comment", conn)
+    df = pd.read_sql("SELECT created FROM post", conn)
 
     count_df = pd.read_sql("SELECT COUNT(*) AS total_comments FROM comment", conn)
     total = int(count_df["total_comments"][0])
-    print("Tổng số comment:", total)
+    print("Tổng số post:", total)
 
     df['created'] = pd.to_datetime(df['created'], errors='coerce', utc=True)
     df['created'] = df['created'].dt.tz_convert('Asia/Ho_Chi_Minh')
@@ -46,5 +46,5 @@ plt.yticks(
     rotation=0
 )
 #plt.show()
-plt.savefig("heat_map_activate.png", dpi=300)
+plt.savefig("heat_map_activate_post.png", dpi=300)
 plt.close()
