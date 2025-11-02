@@ -52,46 +52,46 @@
 -- select *
 -- from r_user
 
-
-CREATE TABLE r_user (
-    username TEXT PRIMARY KEY,
-    link_karma INTEGER NOT NULL,
-    comment_karma INTEGER NOT NULL,
-    created TEXT NOT NULL,         
-    premium INTEGER NOT NULL,       
-    verified_email INTEGER NOT NULL 
-);
-
-CREATE TABLE achievement (
-    achievement_name TEXT PRIMARY KEY
-);
-
-CREATE TABLE user_achievement (
-    username TEXT NOT NULL,
-    achievement_name TEXT NOT NULL,
-    PRIMARY KEY (username, achievement_name),
-    FOREIGN KEY (username) REFERENCES r_user(username),
-    FOREIGN KEY (achievement_name) REFERENCES achievement(achievement_name)
-);
-
-CREATE TABLE post (
-    id TEXT PRIMARY KEY,
-    subreddit TEXT NOT NULL,
-    title TEXT NOT NULL,
-    content TEXT,                 
-    p_url TEXT NOT NULL,
-    score INTEGER NOT NULL,
-    created TEXT NOT NULL,         
-    username TEXT NOT NULL,
-    FOREIGN KEY (username) REFERENCES r_user(username)
-);
-
-CREATE TABLE comment (
-    id TEXT PRIMARY KEY,
-    body TEXT NOT NULL,
-    subreddit TEXT NOT NULL,
-    score INTEGER NOT NULL,
-    created TEXT NOT NULL,
-    username TEXT NOT NULL,
-    FOREIGN KEY (username) REFERENCES r_user(username)
-);
+--
+-- CREATE TABLE r_user (
+--     username TEXT PRIMARY KEY,
+--     link_karma INTEGER NOT NULL,
+--     comment_karma INTEGER NOT NULL,
+--     created TEXT NOT NULL,
+--     premium INTEGER NOT NULL,
+--     verified_email INTEGER NOT NULL
+-- );
+--
+-- CREATE TABLE achievement (
+--     achievement_name TEXT PRIMARY KEY
+-- );
+--
+-- CREATE TABLE user_achievement (
+--     username TEXT NOT NULL,
+--     achievement_name TEXT NOT NULL,
+--     PRIMARY KEY (username, achievement_name),
+--     FOREIGN KEY (username) REFERENCES r_user(username),
+--     FOREIGN KEY (achievement_name) REFERENCES achievement(achievement_name)
+-- );
+--
+-- CREATE TABLE post (
+--     id TEXT PRIMARY KEY,
+--     subreddit TEXT NOT NULL,
+--     title TEXT NOT NULL,
+--     content TEXT,
+--     p_url TEXT NOT NULL,
+--     score INTEGER NOT NULL,
+--     created TEXT NOT NULL,
+--     username TEXT NOT NULL,
+--     FOREIGN KEY (username) REFERENCES r_user(username)
+-- );
+--
+-- CREATE TABLE comment (
+--     id TEXT PRIMARY KEY,
+--     body TEXT NOT NULL,
+--     subreddit TEXT NOT NULL,
+--     score INTEGER NOT NULL,
+--     created TEXT NOT NULL,
+--     username TEXT NOT NULL,
+--     FOREIGN KEY (username) REFERENCES r_user(username)
+-- );
