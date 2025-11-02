@@ -37,7 +37,7 @@ activity = df.groupby(['day_of_week', 'hour']).size().unstack(fill_value=0)
 plt.figure(figsize=(12, 5))
 sns.heatmap(activity, cmap="YlOrRd")
 
-plt.title("Hoạt động theo thời gian trong tuần (Comment)", fontsize=14)
+plt.title("Hoạt động theo thời gian trong tuần (post)", fontsize=14)
 plt.xlabel("Giờ trong ngày")
 plt.ylabel("Thứ trong tuần")
 plt.yticks(
