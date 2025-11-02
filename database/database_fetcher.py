@@ -25,10 +25,30 @@ class DatabaseFetcher:
         params = urllib.parse.quote_plus(self.__connection_string)
         self.__engine = create_engine(f"mssql+pyodbc:///?odbc_connect={params}")
 
-        self.__r_user_table = pd.read_sql("SELECT * FROM r_user", self.__cnxn)
-        self.__user_achievement_table = pd.read_sql("SELECT * FROM user_achievement", self.__cnxn)
-        self.__post_table = pd.read_sql("SELECT * FROM post", self.__cnxn)
-        self.__comment_table = pd.read_sql("SELECT * FROM comment", self.__cnxn)
+        # self.__r_user_table = pd.read_sql("SELECT * FROM r_user", self.__cnxn)
+        # self.__user_achievement_table = pd.read_sql("SELECT * FROM user_achievement", self.__cnxn)
+        # self.__post_table = pd.read_sql("SELECT * FROM post", self.__cnxn)
+        # self.__comment_table = pd.read_sql("SELECT * FROM comment", self.__cnxn)
+
+    def execute(self, query, params=None, fetchone=False, fetchall=False):
+
+        cursor = self.__cursor
+
+        if params:
+            cursor.execute(query, params)
+        else:
+            cursor.execute(query)
+
+        result = None
+        if fetchone:
+            result = cursor.fetchone()
+        elif fetchall:
+            result = cursor.fetchall()
+
+        self.__cnxn.commit()
+        return result
+
+        
 
     def import_from_sqlite_folder(self, folder_path: str):
         count_files = 0
@@ -116,23 +136,23 @@ class DatabaseFetcher:
 
 
 
-    def get_r_user_table(self):
-        return self.__r_user_table
+    # def get_r_user_table(self):
+    #     return self.__r_user_table
     
-    def get_user_achievement_table(self):
-        return self.__user_achievement_table
+    # def get_user_achievement_table(self):
+    #     return self.__user_achievement_table
     
-    def get_post_table(self):
-        return self.__post_table
+    # def get_post_table(self):
+    #     return self.__post_table
     
-    def get_comment_table(self):
-        return self.__comment_table
+    # def get_comment_table(self):
+    #     return self.__comment_table
     
-    def get_size(self):
-        print(f"user_achievement: {len(self.__user_achievement_table)}")
-        print(f"r_user: {len(self.__r_user_table)}")
-        print(f"post: {len(self.__post_table)}")
-        print(f"comment: {len(self.__comment_table)}")
+    # def get_size(self):
+    #     print(f"user_achievement: {len(self.__user_achievement_table)}")
+    #     print(f"r_user: {len(self.__r_user_table)}")
+    #     print(f"post: {len(self.__post_table)}")
+    #     print(f"comment: {len(self.__comment_table)}")
 
 # oData = DatabaseFetcher()
 
