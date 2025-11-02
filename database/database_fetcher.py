@@ -30,25 +30,10 @@ class DatabaseFetcher:
         # self.__post_table = pd.read_sql("SELECT * FROM post", self.__cnxn)
         # self.__comment_table = pd.read_sql("SELECT * FROM comment", self.__cnxn)
 
-    def execute(self, query, params=None, fetchone=False, fetchall=False):
-
+    def execute(self, query, params=None):
         cursor = self.__cursor
-
-        if params:
-            cursor.execute(query, params)
-        else:
-            cursor.execute(query)
-
-        result = None
-        if fetchone:
-            result = cursor.fetchone()
-        elif fetchall:
-            result = cursor.fetchall()
-
-        self.__cnxn.commit()
-        return result
-
-        
+        result_table = pd.read_sql(query, self.__cnxn)
+        return result_table # Data Frame
 
     def import_from_sqlite_folder(self, folder_path: str):
         count_files = 0
