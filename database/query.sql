@@ -37,11 +37,11 @@
 -- 	username varchar(30) not null references r_user(username)
 -- )
 
--- drop table comment
--- drop table post
--- drop table user_achievement
--- drop table achievement
--- drop table r_user
+drop table comment
+drop table post
+drop table user_achievement
+drop table achievement
+drop table r_user
 
 -- select username, count(username) as number_user
 -- from r_user
