@@ -7,4 +7,11 @@
     <orderEntry type="jdk" jdkName="Python 3.13 (Detect-clone-accounts-reddit-flatform-data-science-project-)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="PyDocumentationSettings">
+    <option name="format" value="PLAIN" />
+    <option name="myDocStringFormat" value="Plain" />
+  </component>
+>>>>>>> 25995f7c6700ecb4b6168fa0cbe4dbb9eaf6be84
 </module>
