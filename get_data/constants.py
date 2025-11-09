@@ -1,10 +1,13 @@
 import os
 
-CLIENT_ID = os.environ["CLIENT_ID"]
-SECRET = os.environ["SECRET"]
-USERNAME = os.environ["USERNAME"]
-PASSWORD = os.environ["PASSWORD"]
-USER_AGENT = os.environ["USER_AGENT"]
+try:
+    CLIENT_ID = os.environ["CLIENT_ID"]
+    SECRET = os.environ["SECRET"]
+    USERNAME = os.environ["USERNAME"]
+    PASSWORD = os.environ["PASSWORD"]
+    USER_AGENT = os.environ["USER_AGENT"]
+except:
+    pass
 
 
 MAX_SIZE_BODY = 8000
