@@ -4,7 +4,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 from database.database_fetcher import DatabaseFetcher
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 import numpy as np
-from scipy.sparse import csr_matrix
 import re
 
 

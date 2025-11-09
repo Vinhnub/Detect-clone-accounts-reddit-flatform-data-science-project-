@@ -5,7 +5,7 @@ import time
 from get_data.constants import *
 from termcolor import colored
 import logging
-from database.database_access import Database
+from database.database_fetcher_sqlite import Database
 #from get_data.secrets import *
 import argparse
 

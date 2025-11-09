@@ -1,47 +1,47 @@
--- create table r_user (
--- 	username varchar(30) primary key,
--- 	link_karma int not null, 
--- 	comment_karma int not null,
--- 	created datetime not null,
--- 	premium bit not null,
--- 	verified_email bit not null
--- );
+create table r_user (
+	username varchar(30) primary key,
+	link_karma int not null,
+	comment_karma int not null,
+	created datetime not null,
+	premium bit not null,
+	verified_email bit not null
+);
 
--- create table achievement (
--- 	achievement_name varchar(50) primary key
--- )
+create table achievement (
+	achievement_name varchar(50) primary key
+)
 
--- create table user_achievement (
--- 	username varchar(30) not null references r_user(username),
--- 	achievement_name varchar(50) not null references achievement(achievement_name),
--- 	constraint u_a primary key (username, achievement_name)
--- )
+create table user_achievement (
+	username varchar(30) not null references r_user(username),
+	achievement_name varchar(50) not null references achievement(achievement_name),
+	constraint u_a primary key (username, achievement_name)
+)
 
--- create table post (
--- 	id varchar(15) primary key,
--- 	subreddit varchar(30) not null,
--- 	title nvarchar(400) not null,
--- 	content nvarchar(MAX),
--- 	p_url varchar(MAX) not null,
--- 	score int not null,
--- 	created datetime not null,
--- 	username varchar(30) not null references r_user(username)
--- )
+create table post (
+	id varchar(15) primary key,
+	subreddit varchar(30) not null,
+	title nvarchar(400) not null,
+	content nvarchar(MAX),
+	p_url varchar(MAX) not null,
+	score int not null,
+	created datetime not null,
+	username varchar(30) not null references r_user(username)
+)
 
--- create table comment (
--- 	id varchar(15) primary key,
--- 	body nvarchar(MAX) not null,
--- 	subreddit varchar(30) not null,
--- 	score int not null,
--- 	created datetime not null,
--- 	username varchar(30) not null references r_user(username)
--- )
+create table comment (
+	id varchar(15) primary key,
+	body nvarchar(MAX) not null,
+	subreddit varchar(30) not null,
+	score int not null,
+	created datetime not null,
+	username varchar(30) not null references r_user(username)
+)
 
--- drop table comment
--- drop table post
--- drop table user_achievement
--- drop table achievement
--- drop table r_user
+drop table comment
+drop table post
+drop table user_achievement
+drop table achievement
+drop table r_user
 
 -- select username, count(username) as number_user
 -- from r_user
