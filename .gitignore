@@ -180,5 +180,6 @@ database/data.db
 database/data/*.db
 crawReditRender/data/*.db
 database/new_data/*.db
+reddit_spam_model.pkl
 
 # End of https://www.toptal.com/developers/gitignore/api/python
