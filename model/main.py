@@ -23,7 +23,7 @@ class RedditCrawler:
     }))
 
     def __init__(self):
-        self.__pipeline = joblib.load('reddit_spam_model.pkl')
+        self.__pipeline = joblib.load('reddit_spam_model_svm.pkl')
         self.__auth = auth = HTTPBasicAuth(CLIENT_ID, SECRET)
         self.__data = {"grant_type": "password",
                        "username": USERNAME,
