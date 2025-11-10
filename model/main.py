@@ -312,9 +312,15 @@ class RedditCrawler:
                     number_user_get += 1
                     print(f"================ User {number_user_get} ================")
                     user_data = self.get_user_info(author) #dictionary
+                    if user_data is None:
+                        self.log(f"User Not Found: {author}", "error")
+                        continue
                     user_achiverments = self.get_user_achievement(author) #dataframe
                     user_posts = self.get_user_post(author) #dataframe
                     user_comments = self.get_user_comment(author) #dataframe
+                    if len(user_posts) == 0 and len(user_comments) == 0:
+                        self.log(f"Unable to classify due to lack of data {author}", "error")
+                        continue
                     # print(user_data)
                     # print(user_achiverments)
                     # print(user_posts)
