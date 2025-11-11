@@ -28,6 +28,18 @@ def cal_total_achievements(user):
     user_achievement = user_achievements[user_achievements["username"] == user]
     return len(user_achievement)
 
+def avg_interval(data_check, max_gap_days=7):
+    df = data_check.copy()
+    if len(df) == 0:
+        return 10000000
+    df["created_utc"] = pd.to_datetime(df["created_utc"])
+    df = df.sort_values("created_utc")
+    df["delta_seconds"] = df["created_utc"].diff().dt.total_seconds()
+    max_delta = max_gap_days * 24 * 3600
+    filtered_deltas = df["delta_seconds"][df["delta_seconds"] <= max_delta]
+    return filtered_deltas.mean()
+
+
 list_users = users["username"].tolist()
 
 count = 1
@@ -48,7 +60,9 @@ for user in list_users:
             "tf_idf_comment" : np.nan,
             "subreddit_count" : np.nan,
             "comment_per_post" : np.nan,
-            "karma_ratio" : np.nan
+            "karma_ratio" : np.nan,
+            "avg_post_interval": np.nan,
+            "avg_comment_interval": np.nan,
         }
         data[user]["link_karma"] = users.loc[users["username"] == user, "link_karma"].iloc[0]
         data[user]["comment_karma"] = users.loc[users["username"] == user, "comment_karma"].iloc[0]
@@ -62,6 +76,8 @@ for user in list_users:
         data[user]["subreddit_count"] = result[4]
         data[user]["comment_per_post"] = 0 if result[0] == 0 else result[1]/result[0]
         data[user]["karma_ratio"] = 0 if data[user]["comment_karma"] == 0 else data[user]["link_karma"]/data[user]["comment_karma"]
+        data[user]["avg_post_interval"] = avg_interval(posts[posts["username"] == user])
+        data[user]["avg_comment_interval"] = avg_interval(comments[comments["username"] == user])
         tf_idf_post_content = duplicate_score.loc[duplicate_score["username"] == user, "post"]
         if not tf_idf_post_content.empty:
             data[user]["tf_idf_post_content"] = tf_idf_post_content.iloc[0]
