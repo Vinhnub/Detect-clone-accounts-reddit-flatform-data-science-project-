@@ -12,6 +12,7 @@ import numpy as np
 import re
 import joblib
 import pandas as pd
+import os
 
 
 class RedditCrawler:
@@ -310,6 +311,7 @@ class RedditCrawler:
                 if author not in ("[deleted]", "AutoModerator") and author not in dicts:
                     dicts[author] = 1
                     number_user_get += 1
+
                     print(f"================ User {number_user_get} ================")
                     user_data = self.get_user_info(author) #dictionary
                     if user_data is None:
@@ -318,6 +320,8 @@ class RedditCrawler:
                     user_achiverments = self.get_user_achievement(author) #dataframe
                     user_posts = self.get_user_post(author) #dataframe
                     user_comments = self.get_user_comment(author) #dataframe
+
+
                     if len(user_posts) == 0 and len(user_comments) == 0:
                         self.log(f"Unable to classify due to lack of data {author}", "error")
                         continue
@@ -325,6 +329,7 @@ class RedditCrawler:
                     # print(user_achiverments)
                     # print(user_posts)
                     # print(user_comments)
+
 
                     user_feature = pd.DataFrame([{
                         "link_karma": user_data["link_karma"],
@@ -342,6 +347,8 @@ class RedditCrawler:
                        # "karma_ratio" : 0 if user_data["comment_karma"] == 0 else user_data["link_karma"]/user_data["comment_karma"],
                     }])
                     print(user_feature)
+
+
                     spam_prob = self.__pipeline.predict_proba(user_feature)[:,1]
                     spam_label = self.__pipeline.predict(user_feature)
                     if spam_label == 0:
@@ -352,6 +359,14 @@ class RedditCrawler:
                         self.log(f"Got {author}", "error")
                         self.log(f"Spam Probility: {spam_prob}", "error")
                         self.log(f"Spam Label: {spam_label}", "error")
+
+
+                    user_feature["label"] = spam_label
+                    if not os.path.exists("data_prepare/real_data.csv"):
+                        user_feature.to_csv("data_prepare/real_data.csv", index=False)
+                    else:
+                        user_feature.to_csv("data_prepare/real_data.csv", mode='a', index=False, header=False)
+
                     if number_user_get >= max_users:
                         running = False
                         break
