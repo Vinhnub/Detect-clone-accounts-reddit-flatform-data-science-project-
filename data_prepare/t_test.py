@@ -15,7 +15,9 @@ for col in ["link_karma",
             "tf_idf_comment" ,
             "subreddit_count" ,
             "comment_per_post" ,
-            "karma_ratio"]:
+            "karma_ratio",
+            "avg_post_interval",
+            "avg_comment_interval"]:
     spam = df[df["label"] == 1][col]
     not_spam = df[df["label"] == 0][col]
     stat, p = ttest_ind(spam, not_spam)

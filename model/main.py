@@ -77,6 +77,19 @@ class RedditCrawler:
         result = pd.concat([posts["subreddit"], comments["subreddit"]], ignore_index=True)
         return len(list(set(result.to_list())))
 
+    def avg_interval(self, data_check, max_gap_days=1):
+        df = data_check.copy()
+        if len(df) == 0:
+            return 10000000
+        df["created"] = pd.to_datetime(df["created"])
+        df = df.sort_values("created")
+        df["delta_seconds"] = df["created"].diff().dt.total_seconds()
+        max_delta = max_gap_days * 24 * 3600
+        filtered_deltas = df["delta_seconds"][df["delta_seconds"] <= max_delta]
+        if len(filtered_deltas) < 10:
+            return 10000000
+        return filtered_deltas.mean()
+
     def print_error(self, s):
         self.log(s, level="error")
 
@@ -344,7 +357,9 @@ class RedditCrawler:
                         "tf_idf_comment" : 0 if len(user_comments) == 0 else self.cal_content_duplicate_ratio(user_comments),
                         "subreddit_count" : self.subreddit_count(user_posts, user_comments),
                         "comment_per_post" : 0 if len(user_posts) == 0 else len(user_comments)/len(user_posts),
-                       # "karma_ratio" : 0 if user_data["comment_karma"] == 0 else user_data["link_karma"]/user_data["comment_karma"],
+                        "karma_ratio" : 0 if user_data["comment_karma"] == 0 else user_data["link_karma"]/user_data["comment_karma"],
+                        "avg_post_interval": 0 if len(user_posts) == 0 else self.avg_interval(user_posts),
+                        "avg_comment_interval": 0 if len(user_comments) == 0 else self.avg_interval(user_comments)
                     }])
                     print(user_feature)
 

@@ -25,6 +25,12 @@ def label_user(row):
     ):
         return 1
 
+    if (
+        (0 < row["avg_post_interval"] and row["avg_post_interval"] < 1000 and row["total_posts"] > 50) or
+        (0 < row["avg_comment_interval"] and row["avg_comment_interval"] < 1000 and row["total_comments"] > 50)
+    ):
+        return 1
+
     if row["tf_idf_comment"] > 0.2 or row["tf_idf_post_content"] > 0.3:
         return 1
 

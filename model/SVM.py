@@ -10,7 +10,7 @@ import joblib
 data = pd.read_csv("data_prepare/data_training.csv")
 
 # Remove unneeded columns
-data = data.drop(columns=["username", "avg_post_score", "karma_ratio"])
+data = data.drop(columns=["username", "avg_post_score"])
 
 X = data.drop(columns=["label"])
 
