@@ -41,5 +41,5 @@ print("ROC AUC:", roc_auc_score(y_test, y_proba))
 
 # Save model
 joblib.dump(pipeline, "reddit_spam_model_svm.pkl")
-print("✅ Model saved as reddit_spam_model_svm.pkl")
+print("Model saved as reddit_spam_model_svm.pkl")
 

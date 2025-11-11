@@ -32,8 +32,10 @@ def label_user(row):
     soft_score += 1 if row["link_karma"] < 10 else 0
     soft_score += 1 if row["comment_karma"] < 10 else 0
     soft_score += 1 if row["verified_email"] == 0 else 0
+    soft_score += 1 if row["link_karma"] < 10 and row["comment_karma"] > 100 else 0
+    soft_score += 1 if row["link_karma"] > 100 and row["comment_karma"] < 10 else 0
 
-    return 1 if soft_score >= 2 else 0
+    return 1 if soft_score >= 3 else 0
 
 data = pd.read_csv("data_prepare/data_training.csv")
 data["label"] = data.apply(label_user, axis=1)
