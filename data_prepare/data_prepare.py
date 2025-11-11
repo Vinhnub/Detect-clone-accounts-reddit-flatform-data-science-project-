@@ -67,7 +67,7 @@ for user in list_users:
             data[user]["tf_idf_post_content"] = tf_idf_post_content.iloc[0]
         tf_idf_comment = duplicate_score.loc[duplicate_score["username"] == user, "comment"]
         if not tf_idf_comment.empty:
-            data[user]["tf_idf_comment"] = tf_idf_post_content.iloc[0]
+            data[user]["tf_idf_comment"] = tf_idf_comment.iloc[0]
     else:
         continue
 data_filtered = pd.DataFrame(columns=['username', 'post', 'comment'])

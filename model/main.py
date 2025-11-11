@@ -336,7 +336,7 @@ class RedditCrawler:
                         "avg_comment_score" : 0 if len(user_comments) == 0 else user_comments["score"].mean(),
                         "total_achievements" : len(user_achiverments),
                         "tf_idf_post_content" : 0 if len(user_posts) == 0 else self.cal_content_duplicate_ratio(user_posts),
-                        "tf_idf_comment" : 0 if len(user_comments) == 0 else self.cal_content_duplicate_ratio(user_comments),
+                        "tf_idf_comment" : 0 if len(user_comments) == 0 else self.cal_content_duplicate_ratio(),
                         "subreddit_count" : self.subreddit_count(user_posts, user_comments),
                         "comment_per_post" : 0 if len(user_posts) == 0 else len(user_comments)/len(user_posts),
                         "karma_ratio" : 0 if user_data["comment_karma"] == 0 else user_data["link_karma"]/user_data["comment_karma"],
