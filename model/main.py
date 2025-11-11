@@ -344,10 +344,14 @@ class RedditCrawler:
                     print(user_feature)
                     spam_prob = self.__pipeline.predict_proba(user_feature)[:,1]
                     spam_label = self.__pipeline.predict(user_feature)
-
-                    self.log(f"Got {author}", "info")
-                    self.log(f"Spam Probility: {spam_prob}", "info")
-                    self.log(f"Spam Label: {spam_label}", "info")
+                    if spam_label == 0:
+                        self.log(f"Got {author}", "info")
+                        self.log(f"Spam Probility: {spam_prob}", "info")
+                        self.log(f"Spam Label: {spam_label}", "info")
+                    else:
+                        self.log(f"Got {author}", "error")
+                        self.log(f"Spam Probility: {spam_prob}", "error")
+                        self.log(f"Spam Label: {spam_label}", "error")
                     if number_user_get >= max_users:
                         running = False
                         break
