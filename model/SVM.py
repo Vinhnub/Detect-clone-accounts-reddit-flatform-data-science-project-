@@ -10,13 +10,15 @@ import joblib
 data = pd.read_csv("data_prepare/data_training.csv")
 
 # Remove unneeded columns
-data = data.drop(columns=["username"])
+data = data.drop(columns=["username", "avg_post_score", "karma_ratio"])
 
-Y = data
+X = data.drop(columns=["label"])
+
+Y = data["label"]
 
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(
-    data, y, test_size=0.2, random_state=42, stratify=y
+    X, Y, test_size=0.2, random_state=42, stratify=Y
 )
 
 smote = SMOTE(random_state=42)

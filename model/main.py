@@ -108,7 +108,7 @@ class RedditCrawler:
                                     auth=self.__auth, data=self.__data, headers={"User-Agent": USER_AGENT})
                 if res.status_code != 200:
                     self.print_error(f"{res.status_code} {res.text}")
-                    time.sleep(60)
+                    time.sleep(10)
                     continue
                 self.__token = res.json()["access_token"]
                 self.__headers = {"Authorization": f"bearer {self.__token}",
@@ -142,7 +142,7 @@ class RedditCrawler:
                         self.__time_error = 0
                         self.print_error(f" Error!")
                         return all_items
-                time.sleep(60)
+                time.sleep(10)
                 continue
             data = r.json()["data"]
             # pretty_json = json.dumps(r.json(), indent=4, sort_keys=True)
@@ -221,7 +221,7 @@ class RedditCrawler:
                         self.__time_error = 0
                         self.print_error(f" Error!")
                         return
-                time.sleep(60)
+                time.sleep(10)
                 continue
             else:
                 break
@@ -255,7 +255,7 @@ class RedditCrawler:
                         self.__time_error = 0
                         self.print_error(f"Error!")
                         return
-                time.sleep(60)
+                time.sleep(10)
                 continue
             else:
                 break
@@ -299,7 +299,7 @@ class RedditCrawler:
                 self.print_error(f"{r.status_code} {r.text}")
                 if r.status_code == 401:  # token overdue
                     self._get_token()
-                time.sleep(60)
+                time.sleep(10)
                 continue
 
             data = r.json()["data"]
@@ -332,14 +332,14 @@ class RedditCrawler:
                         "verified_email": user_data["verified_email"],
                         "total_posts" : len(user_posts),
                         "total_comments" : len(user_comments),
-                        "avg_post_score" : 0 if len(user_posts) == 0 else user_posts["score"].mean(),
+                       # "avg_post_score" : 0 if len(user_posts) == 0 else user_posts["score"].mean(),
                         "avg_comment_score" : 0 if len(user_comments) == 0 else user_comments["score"].mean(),
                         "total_achievements" : len(user_achiverments),
                         "tf_idf_post_content" : 0 if len(user_posts) == 0 else self.cal_content_duplicate_ratio(user_posts),
-                        "tf_idf_comment" : 0 if len(user_comments) == 0 else self.cal_content_duplicate_ratio(),
+                        "tf_idf_comment" : 0 if len(user_comments) == 0 else self.cal_content_duplicate_ratio(user_comments),
                         "subreddit_count" : self.subreddit_count(user_posts, user_comments),
                         "comment_per_post" : 0 if len(user_posts) == 0 else len(user_comments)/len(user_posts),
-                        "karma_ratio" : 0 if user_data["comment_karma"] == 0 else user_data["link_karma"]/user_data["comment_karma"],
+                       # "karma_ratio" : 0 if user_data["comment_karma"] == 0 else user_data["link_karma"]/user_data["comment_karma"],
                     }])
                     print(user_feature)
                     spam_prob = self.__pipeline.predict_proba(user_feature)[:,1]
