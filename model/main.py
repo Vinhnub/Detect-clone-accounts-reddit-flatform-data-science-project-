@@ -363,16 +363,15 @@ class RedditCrawler:
                     }])
                     print(user_feature)
 
-
-                    spam_prob = self.__pipeline.predict_proba(user_feature)[:,1]
+                    spam_score = self.__pipeline.decision_function(user_feature)
                     spam_label = self.__pipeline.predict(user_feature)
                     if spam_label == 0:
                         self.log(f"Got {author}", "info")
-                        self.log(f"Spam Probility: {spam_prob}", "info")
+                        self.log(f"Spam Scorec: {spam_score}", "info")
                         self.log(f"Spam Label: {spam_label}", "info")
                     else:
                         self.log(f"Got {author}", "error")
-                        self.log(f"Spam Probility: {spam_prob}", "error")
+                        self.log(f"Spam Scorec: {spam_score}", "error")
                         self.log(f"Spam Label: {spam_label}", "error")
 
 

@@ -27,19 +27,19 @@ X_train, y_train = smote.fit_resample(X_train, y_train)
 
 pipeline = Pipeline([
     ('scaler', StandardScaler()),
-    ('clf', SVC(kernel='rbf', probability=True, class_weight='balanced', gamma="scale"))
+    ('clf', SVC(kernel='rbf', class_weight='balanced', gamma=0.1))
 ])
 
 pipeline.fit(X_train, y_train)
 
 # Prediction & Evaluation
-y_proba = pipeline.predict_proba(X_test)[:, 1]
+y_score = pipeline.decision_function(X_test)
 
-threshold = 0.6     # You can tune threshold later
-y_pred = (y_proba > threshold).astype(int)
+threshold = 0.0  # 0 tương đương ranh giới mặc định
+y_pred = (y_score > threshold).astype(int)
 
 print("Classification Report:\n", classification_report(y_test, y_pred))
-print("ROC AUC:", roc_auc_score(y_test, y_proba))
+print("ROC AUC:", roc_auc_score(y_test, y_score))
 
 # Save model
 joblib.dump(pipeline, "reddit_spam_model_svm.pkl")
